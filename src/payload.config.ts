@@ -95,7 +95,23 @@ export default buildConfig({
   },
 
   db: postgresAdapter({
-    pool: { connectionString: process.env.DATABASE_URI || "" },
+    pool: {
+      // Neon appends `channel_binding=require`, which node-postgres does not
+      // understand and rejects. Everything still runs over TLS via sslmode.
+      connectionString: (process.env.DATABASE_URI || "").replace(
+        /[?&]channel_binding=[^&]*/,
+        "",
+      ),
+    },
+    // Payload only creates tables automatically when NODE_ENV isn't
+    // "production". On a hosted deployment it is, so the schema was never
+    // built and every admin request failed while the public pages quietly
+    // fell back to their hard-coded copy.
+    //
+    // Push is the right call while this is a single environment with no
+    // migration history. Before the real launch, generate migrations and set
+    // this back to false so schema changes are reviewable and reversible.
+    push: true,
   }),
 
   sharp,

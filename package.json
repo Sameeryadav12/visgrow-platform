@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "payload generate:importmap && payload generate:types && next dev",
-    "build": "payload generate:importmap && payload generate:types && next build",
+    "build": "next build",
     "start": "next start",
     "db:up": "docker compose up -d",
     "db:down": "docker compose down",
@@ -16,7 +16,8 @@
     "payload": "payload",
     "test": "npx playwright test",
     "test:ui": "npx playwright test --ui",
-    "test:install": "npx playwright install chromium"
+    "test:install": "npx playwright install chromium",
+    "build:full": "payload generate:importmap && payload generate:types && next build"
   },
   "dependencies": {
     "@payloadcms/db-postgres": "3.88.0",

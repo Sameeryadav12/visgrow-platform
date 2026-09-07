@@ -142,6 +142,23 @@ git checkout v1.0.0        # inspect any earlier release exactly as it shipped
 
 Vercel keeps every deployment, so rolling back is instant and doesn't require git at all: open the Deployments tab, find the last good build, and promote it. Combined with tags, that means a bad change can be undone in under a minute — from the dashboard for speed, or from git for a permanent revert.
 
+## Deployment notes
+
+**Schema.** `push: true` is set on the Postgres adapter. Payload only creates
+tables automatically when `NODE_ENV` isn't `production`, so without it a hosted
+deployment starts against an empty database — the admin panel 500s while the
+public pages quietly fall back to their hard-coded copy, which makes the
+failure easy to miss. Before the real launch, generate migrations and turn push
+off so schema changes are reviewable.
+
+**Neon.** The connection string is stripped of `channel_binding`, which
+node-postgres rejects. TLS still applies via `sslmode=require`.
+
+**Uploads.** Media is configured to write to `public/media`, which does not
+survive on a serverless host — the filesystem is read-only and rebuilt on every
+deploy. Images committed to the repo work fine; anything uploaded through the
+admin panel needs S3 or Vercel Blob before launch.
+
 ## Status
 
 Built and functional. Deployment target is Vercel with a hosted PostgreSQL instance.
