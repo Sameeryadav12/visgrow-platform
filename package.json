@@ -1,0 +1,44 @@
+{
+  "name": "visgrow-app",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "payload generate:importmap && payload generate:types && next dev",
+    "build": "payload generate:importmap && payload generate:types && next build",
+    "start": "next start",
+    "db:up": "docker compose up -d",
+    "db:down": "docker compose down",
+    "db:reset": "docker compose down -v && docker compose up -d",
+    "backup": "node --experimental-strip-types scripts/backup.mjs",
+    "generate:importmap": "payload generate:importmap",
+    "generate:types": "payload generate:types",
+    "payload": "payload",
+    "test": "npx playwright test",
+    "test:ui": "npx playwright test --ui",
+    "test:install": "npx playwright install chromium"
+  },
+  "dependencies": {
+    "@payloadcms/db-postgres": "3.88.0",
+    "@payloadcms/next": "3.88.0",
+    "@payloadcms/richtext-lexical": "3.88.0",
+    "@payloadcms/ui": "3.88.0",
+    "graphql": "16.9.0",
+    "next": "16.3.1",
+    "payload": "3.88.0",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "resend": "6.24.0",
+    "sharp": "0.34.2",
+    "stripe": "22.6.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "4.1.15",
+    "@types/node": "22.10.5",
+    "@types/react": "19.2.3",
+    "@types/react-dom": "19.2.3",
+    "tailwindcss": "4.1.15",
+    "typescript": "5.9.3",
+    "@playwright/test": "1.62.1"
+  }
+}

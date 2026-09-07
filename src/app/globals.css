@@ -1,0 +1,406 @@
+@import "tailwindcss";
+
+:root {
+  /* Brand colors */
+  --color-purple: #6918dc;
+  --color-violet: #b625b9;
+  --color-pink: #e94b6c;
+  --color-orange: #f6a83d;
+  --color-ink: #241a33;
+  --color-sub: #5c5470;
+  --color-lavender: #f8f5ff;
+  --color-line: #ece5fb;
+
+  --gradient-brand: linear-gradient(
+    90deg,
+    #6918dc 0%,
+    #b625b9 30%,
+    #e94b6c 60%,
+    #f6a83d 100%
+  );
+
+  --gradient-deep: linear-gradient(
+    150deg,
+    #3a1264 0%,
+    #6918dc 55%,
+    #8a1fb0 100%
+  );
+
+  --background: #ffffff;
+  --foreground: var(--color-ink);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  --color-brand-purple: var(--color-purple);
+  --color-brand-violet: var(--color-violet);
+  --color-brand-pink: var(--color-pink);
+  --color-brand-orange: var(--color-orange);
+  --color-brand-ink: var(--color-ink);
+  --color-brand-sub: var(--color-sub);
+  --color-brand-lavender: var(--color-lavender);
+  --color-brand-line: var(--color-line);
+
+  --font-heading: var(--font-heading);
+  --font-body: var(--font-body);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-body), sans-serif;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-heading), sans-serif;
+  letter-spacing: 0.5px;
+  line-height: 1.05;
+}
+
+.bg-brand-gradient {
+  position: relative;
+  background: var(--gradient-brand);
+  overflow: hidden;
+}
+
+.bg-brand-gradient::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 15% 20%, rgba(255, 255, 255, 0.22), transparent 40%),
+    radial-gradient(circle at 88% 78%, rgba(255, 255, 255, 0.16), transparent 45%);
+}
+
+.bg-brand-gradient > *:not([class*="absolute"]) {
+  position: relative;
+  z-index: 1;
+}
+
+.bg-brand-deep {
+  position: relative;
+  background: var(--gradient-deep);
+  overflow: hidden;
+}
+
+.bg-brand-deep::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 12% 15%, rgba(255, 168, 61, 0.18), transparent 40%),
+    radial-gradient(circle at 90% 85%, rgba(233, 75, 108, 0.22), transparent 45%);
+}
+
+.bg-brand-deep > *:not([class*="absolute"]) {
+  position: relative;
+  z-index: 1;
+}
+
+.card-lift {
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.card-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px rgba(105, 24, 220, 0.14);
+  border-color: var(--color-purple);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+.text-brand-gradient {
+  background: var(--gradient-brand);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+@keyframes scrollX {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* Pillar card with gradient top edge */
+.pillar-card {
+  position: relative;
+  border-radius: 18px;
+  background: #fff;
+  border: 1px solid var(--color-line);
+  padding: 34px 28px 30px;
+  overflow: hidden;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.pillar-card::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 5px;
+  background: var(--gradient-brand);
+}
+
+.pillar-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 24px 50px rgba(105, 24, 220, 0.16);
+}
+
+/* Credential / company pills */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #fff;
+  backdrop-filter: blur(4px);
+}
+
+/* Ticker */
+.ticker-wrap {
+  background: var(--color-lavender);
+  border-top: 1px solid var(--color-line);
+  border-bottom: 1px solid var(--color-line);
+  padding: 15px 0;
+  overflow: hidden;
+}
+
+.ticker {
+  display: flex;
+  gap: 58px;
+  white-space: nowrap;
+  animation: scrollX 28s linear infinite;
+  width: max-content;
+}
+
+.ticker span {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--color-purple);
+  letter-spacing: 0.3px;
+}
+
+.ticker span::before {
+  content: "✦";
+  color: var(--color-orange);
+}
+
+/* Pain item — icon beside text */
+.pain-item {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.pain-icon {
+  width: 46px;
+  height: 46px;
+  border-radius: 13px;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 6px 18px rgba(105, 24, 220, 0.14);
+  font-size: 20px;
+}
+
+/* Founder chips */
+.chip-soft {
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 9px 15px;
+  border-radius: 10px;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.chip-flat {
+  background: rgba(255, 255, 255, 0.12);
+  padding: 7px 13px;
+  border-radius: 8px;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #fff;
+}
+
+/* Icon tile for pain points */
+.icon-tile {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 14px;
+  background: var(--color-lavender);
+  border: 1px solid var(--color-line);
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+@keyframes pulseGlow {
+  0%,
+  100% {
+    box-shadow: 0 10px 28px rgba(105, 24, 220, 0.35);
+  }
+  50% {
+    box-shadow: 0 10px 34px rgba(233, 75, 108, 0.45);
+  }
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.45s ease, transform 0.45s ease;
+}
+
+.reveal.in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.icon-check {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: var(--gradient-brand);
+  color: #fff;
+  font-size: 17px;
+  font-weight: 900;
+  flex-shrink: 0;
+  margin-bottom: 14px;
+}
+
+.floating-el {
+  transition: bottom 0.3s ease;
+}
+
+body.has-sticky-cta .floating-el {
+  bottom: 88px;
+}
+
+/* ------------------------------------------------------------ accessibility */
+
+/* Hidden until a keyboard user tabs to it, then jumps past the whole menu. */
+.skip-link {
+  position: absolute;
+  left: 12px;
+  top: -100px;
+  z-index: 300;
+  padding: 12px 20px;
+  border-radius: 0 0 12px 12px;
+  background: var(--gradient-brand);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  transition: top 0.15s ease;
+}
+
+.skip-link:focus {
+  top: 0;
+}
+
+/* A visible focus ring on every interactive element. Without this, keyboard
+   users genuinely cannot tell where they are on the page. */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+summary:focus-visible,
+[tabindex]:focus-visible {
+  outline: 3px solid var(--color-purple);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* On the gradient and deep-purple sections a purple ring is invisible. */
+.bg-brand-gradient a:focus-visible,
+.bg-brand-gradient button:focus-visible,
+.bg-brand-deep a:focus-visible,
+.bg-brand-deep button:focus-visible {
+  outline-color: #fff;
+}
+
+/*
+ * This site moves a lot: a scrolling logo ticker, a typewriter headline,
+ * counting numbers, scroll reveals and a pulsing button. For someone with a
+ * vestibular disorder that combination can cause real nausea and headaches.
+ * When the operating system says "reduce motion", we stop essentially all
+ * of it — the content still reads perfectly without the movement.
+ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .ticker,
+  .floating-el,
+  .card-lift:hover {
+    animation: none !important;
+    transform: none !important;
+  }
+
+  /* Scroll-revealed sections must stay visible, or the page looks empty. */
+  .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}

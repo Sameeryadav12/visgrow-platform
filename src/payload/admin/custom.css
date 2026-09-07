@@ -1,0 +1,447 @@
+/**
+ * Visgrow admin theme.
+ *
+ * Mustafa is not a developer. The default admin reads as a database tool,
+ * which makes people nervous about touching anything. This keeps Payload's
+ * layout — which works — and puts the brand and better hierarchy on top, so
+ * it feels like his own product and invites editing.
+ *
+ * Brand rule: never a black or dark-grey background. Anywhere.
+ */
+
+:root {
+  --vg-purple: #6918dc;
+  --vg-violet: #b625b9;
+  --vg-pink: #e94b6c;
+  --vg-orange: #f6a83d;
+  --vg-ink: #241a33;
+  --vg-sub: #5c5470;
+  --vg-muted: #9b93ad;
+  --vg-lavender: #f8f5ff;
+  --vg-line: #ece5fb;
+  --vg-gradient: linear-gradient(
+    90deg,
+    #6918dc 0%,
+    #b625b9 30%,
+    #e94b6c 60%,
+    #f6a83d 100%
+  );
+
+  /* Payload's own tokens, repointed at the brand. */
+  --theme-elevation-0: #ffffff;
+  --theme-elevation-50: #fbf9ff;
+  --theme-elevation-100: var(--vg-lavender);
+  --theme-elevation-150: var(--vg-line);
+  --theme-elevation-800: var(--vg-ink);
+  --theme-elevation-900: var(--vg-ink);
+  --theme-text: var(--vg-ink);
+  --theme-bg: #ffffff;
+  --color-base-800: var(--vg-ink);
+  --color-base-900: var(--vg-ink);
+}
+
+/* The font-variable wrapper must not create a box of its own, or it breaks
+   Payload's flex layout. */
+.vg-admin {
+  display: contents;
+}
+
+/* ------------------------------------------------------------ typography */
+
+body,
+input,
+textarea,
+select,
+button {
+  font-family: var(--vg-font-body), system-ui, sans-serif;
+}
+
+/* Only the page title uses the display face. Bebas is uppercase-only and
+   gets cramped and hard to read at small sizes, so everything else stays in
+   Raleway — legibility beats brand consistency inside a working tool. */
+h1 {
+  font-family: var(--vg-font-heading), sans-serif;
+  letter-spacing: 0.8px;
+  font-weight: 400;
+  color: var(--vg-ink);
+}
+
+/* Section titles above repeating lists ("Columns", "Links"). Sentence case,
+   body font, large enough to actually anchor the group below it. */
+.array-field__header h3,
+.blocks-field__header h3,
+.array-field h3,
+.blocks-field h3,
+.group-field__title,
+.render-fields > .field-type > h3 {
+  font-family: var(--vg-font-body), sans-serif !important;
+  font-size: 15px !important;
+  font-weight: 800 !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+  color: var(--vg-ink) !important;
+}
+
+/* ---------------------------------------------------------------- layout */
+
+body,
+.payload-default-nav,
+.template-default__wrap {
+  background: #ffffff;
+}
+
+/* Brand line across the very top, same as the public site. */
+.template-default::before,
+.template-minimal::before {
+  content: "";
+  position: fixed;
+  inset: 0 0 auto 0;
+  height: 3px;
+  background: var(--vg-gradient);
+  z-index: 200;
+}
+
+/* ------------------------------------------------------------------ logo */
+
+/* Payload sizes its icon slot for a square mark. The Visgrow logo is a
+   2.8:1 wordmark, so the slot has to be widened or the logo gets sliced
+   down to "VI". */
+.graphic-icon,
+.step-nav__home,
+.app-header__step-nav .graphic-icon,
+.nav__header .graphic-icon {
+  width: auto !important;
+  min-width: 74px;
+  max-width: none !important;
+  height: auto !important;
+  overflow: visible !important;
+  flex-shrink: 0;
+}
+
+.vg-admin-icon {
+  height: 26px !important;
+  width: auto !important;
+  max-width: none !important;
+  min-width: 73px;
+  display: block;
+  object-fit: contain;
+}
+
+.vg-login-logo {
+  text-align: center;
+  padding: 6px 0 2px;
+}
+
+.vg-login-logo img {
+  height: 62px;
+  width: auto;
+  max-width: none;
+  margin: 0 auto;
+  display: block;
+}
+
+.vg-login-logo p {
+  margin: 16px 0 0;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--vg-sub);
+}
+
+/* ------------------------------------------------------------------- nav */
+
+.nav {
+  background: var(--vg-lavender);
+  border-right: 1px solid var(--vg-line);
+}
+
+.nav__link {
+  border-radius: 9px;
+  margin: 1px 10px;
+  padding: 9px 13px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--vg-sub);
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.nav__link:hover {
+  background: #ffffff;
+  color: var(--vg-purple);
+}
+
+.nav__link.active,
+.nav__link[aria-current="page"] {
+  background: #ffffff;
+  color: var(--vg-purple);
+  font-weight: 700;
+  box-shadow: 0 2px 10px rgba(105, 24, 220, 0.1);
+}
+
+.nav-group__label {
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: 1.3px;
+  text-transform: uppercase;
+  color: var(--vg-muted);
+  padding: 20px 22px 6px;
+}
+
+/* The last nav item was disappearing behind the floating help bubble. */
+.nav__wrap,
+.nav .nav__scroll {
+  padding-bottom: 90px;
+}
+
+/* --------------------------------------------------------------- buttons */
+
+.btn--style-primary,
+.btn--style-primary .btn__content {
+  background: var(--vg-purple);
+  border-color: var(--vg-purple);
+  border-radius: 999px;
+  font-weight: 700;
+}
+
+.btn--style-primary:hover {
+  background: var(--vg-violet);
+  border-color: var(--vg-violet);
+}
+
+.btn--style-secondary {
+  border-radius: 999px;
+  border-color: var(--vg-line);
+  color: var(--vg-ink);
+  font-weight: 700;
+}
+
+.btn--style-secondary:hover {
+  border-color: var(--vg-purple);
+  color: var(--vg-purple);
+}
+
+/* "Add" buttons on repeating rows — make them obviously clickable. */
+.array-field__add-row .btn,
+.blocks-field__drawer-toggler {
+  border-radius: 999px;
+  border: 1.5px dashed var(--vg-line);
+  color: var(--vg-purple);
+  font-weight: 700;
+}
+
+.array-field__add-row .btn:hover {
+  border-color: var(--vg-purple);
+  background: var(--vg-lavender);
+}
+
+/* ------------------------------------------------------------- save bar */
+
+/* These forms are long — the home page has ten tabs. Keep Save pinned so it
+   is never scrolled off and work never feels at risk of being lost. */
+.doc-controls {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  border-bottom: 1px solid var(--vg-line);
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(6px);
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.doc-controls__controls .btn--style-primary {
+  box-shadow: 0 8px 20px rgba(105, 24, 220, 0.24);
+  padding-left: 26px;
+  padding-right: 26px;
+}
+
+/* ---------------------------------------------------------------- fields */
+
+.field-type > label,
+.field-label {
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--vg-ink);
+  letter-spacing: 0.1px;
+}
+
+/* Field help text is where all the guidance for Mustafa lives, so it needs
+   to be readable rather than a faint afterthought. */
+.field-description {
+  color: var(--vg-sub);
+  font-size: 12.5px;
+  line-height: 1.55;
+  margin-top: 5px;
+}
+
+.field-type input[type="text"],
+.field-type input[type="email"],
+.field-type input[type="number"],
+.field-type input[type="password"],
+.field-type textarea,
+.field-type .rs__control {
+  border-radius: 9px;
+  border-color: var(--vg-line);
+  font-size: 14px;
+  color: var(--vg-ink);
+}
+
+.field-type input:focus,
+.field-type textarea:focus,
+.field-type .rs__control--is-focused {
+  border-color: var(--vg-purple);
+  box-shadow: 0 0 0 3px rgba(105, 24, 220, 0.12);
+  outline: none;
+}
+
+/* Required marker — orange rather than alarm-red. */
+.required {
+  color: var(--vg-orange);
+}
+
+/* Groups get a soft container so long forms read as sections. */
+.group-field__wrap {
+  border: 1px solid var(--vg-line);
+  border-radius: 14px;
+  padding: 20px 22px;
+  background: #fff;
+}
+
+/* ------------------------------------------------------- repeating rows */
+
+.array-field__draggable-rows .collapsible,
+.blocks-field .collapsible {
+  border-radius: 12px;
+  border: 1px solid var(--vg-line);
+  overflow: hidden;
+  margin-bottom: 10px;
+  background: #fff;
+}
+
+.collapsible__toggle-wrap {
+  background: var(--vg-lavender);
+  border-bottom: 1px solid var(--vg-line);
+}
+
+.collapsible--collapsed .collapsible__toggle-wrap {
+  border-bottom-color: transparent;
+}
+
+.collapsible__toggle {
+  font-size: 13.5px;
+}
+
+.array-field__row-actions .btn {
+  color: var(--vg-sub);
+}
+
+/* Section labels above repeating groups ("Columns", "Links") */
+.array-field__header h3,
+.blocks-field__header h3 {
+  font-family: var(--vg-font-heading), sans-serif;
+  font-size: 20px;
+  font-weight: 400;
+  letter-spacing: 0.5px;
+  color: var(--vg-ink);
+}
+
+/* ------------------------------------------------------------------ tabs */
+
+.tabs-field__tabs {
+  border-bottom: 1px solid var(--vg-line);
+  gap: 2px;
+  overflow-x: auto;
+}
+
+.tabs-field__tab-button {
+  border-radius: 9px 9px 0 0;
+  font-weight: 700;
+  font-size: 13.5px;
+  color: var(--vg-sub);
+  white-space: nowrap;
+  padding: 11px 15px;
+}
+
+.tabs-field__tab-button:hover {
+  color: var(--vg-purple);
+}
+
+.tabs-field__tab-button--active {
+  color: var(--vg-purple);
+  background: var(--vg-lavender);
+  box-shadow: inset 0 -2px 0 var(--vg-purple);
+}
+
+/* The explanatory line under a tab — keep it visible, it's the coaching. */
+.tabs-field__content > .field-description,
+.tabs-field__tab > p {
+  color: var(--vg-sub);
+  font-size: 13px;
+  line-height: 1.6;
+  padding: 4px 0 14px;
+}
+
+/* ----------------------------------------------------------------- lists */
+
+.table {
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--vg-line);
+}
+
+.table thead th {
+  background: var(--vg-lavender);
+  color: var(--vg-ink);
+  font-weight: 800;
+  font-size: 12px;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+}
+
+.table tbody td {
+  font-size: 13.5px;
+}
+
+.table tbody tr:hover {
+  background: #fbf9ff;
+}
+
+.collection-list__page-info,
+.list-controls,
+.per-page {
+  color: var(--vg-sub);
+  font-size: 13px;
+}
+
+/* Search box */
+.search-filter input {
+  border-radius: 999px;
+  border-color: var(--vg-line);
+}
+
+/* ----------------------------------------------------------------- login */
+
+.login__wrap,
+.template-minimal__wrap {
+  background: var(--vg-lavender);
+}
+
+.login__form {
+  border-radius: 18px;
+  border: 1px solid var(--vg-line);
+  background: #fff;
+  padding: 30px;
+  box-shadow: 0 20px 50px rgba(105, 24, 220, 0.1);
+}
+
+.login .form-submit .btn {
+  background: var(--vg-gradient);
+  border: none;
+  width: 100%;
+}
+
+/* ------------------------------------------------------------ dashboard */
+
+.dashboard__label,
+.dashboard h1 {
+  color: var(--vg-ink);
+}
