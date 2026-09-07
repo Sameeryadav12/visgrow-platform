@@ -119,6 +119,29 @@ src/
 
 ---
 
+## Versioning and releases
+
+`main` is what the client sees. It is always deployable.
+
+| Branch | Vercel deploys it to | Use it for |
+|---|---|---|
+| `main` | the production URL | approved, released work only |
+| `develop` | a stable preview URL | everything in progress |
+| `feature/*` | its own preview URL | one change at a time |
+
+Work happens on a feature branch, merges into `develop` for review on a real URL, and only reaches `main` once the client has approved it. Because `main` never receives untested work, the live site cannot break from a change nobody has looked at.
+
+Every release on `main` is tagged — `v1.0.0`, `v1.1.0` — and recorded in [CHANGELOG.md](./CHANGELOG.md). Tags make previous versions recoverable:
+
+```bash
+git tag -a v1.1.0 -m "Add Gap Analysis pricing"
+git push origin v1.1.0
+
+git checkout v1.0.0        # inspect any earlier release exactly as it shipped
+```
+
+Vercel keeps every deployment, so rolling back is instant and doesn't require git at all: open the Deployments tab, find the last good build, and promote it. Combined with tags, that means a bad change can be undone in under a minute — from the dashboard for speed, or from git for a permanent revert.
+
 ## Status
 
 Built and functional. Deployment target is Vercel with a hosted PostgreSQL instance.
