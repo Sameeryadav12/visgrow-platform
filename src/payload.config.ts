@@ -67,13 +67,34 @@ export default buildConfig({
 
   editor: lexicalEditor(),
 
+  /**
+   * Runs once when the app boots — which on a long-running server means
+   * literally once, and on a serverless host means on every cold start.
+   *
+   * That difference matters. Creating the schema and seeding roughly seventy
+   * records takes far longer than a serverless request is allowed to run, so
+   * doing it here made every cold start of the admin panel time out and
+   * return a 500. The public pages hid it, because their reads fall back to
+   * the copy in the code.
+   *
+   * So setup only runs where there is time for it: locally, or when
+   * explicitly asked for with RUN_SETUP=true. Point .env.local at the hosted
+   * database and start the app once, and it builds and seeds everything.
+   * After that the hosted app just reads and writes normally.
+   */
   onInit: async (payload) => {
-    await ensureFirstUser(payload);
+    const isServerless = Boolean(process.env.VERCEL);
+    const forced = process.env.RUN_SETUP === "true";
 
-    // Fill an empty CMS with the site's current copy. Skips anything that
-    // already has content, so it can never overwrite an edit — and it means
-    // nobody has to remember to run a seed step by hand after a DB reset.
+    if (isServerless && !forced) {
+      return;
+    }
+
     try {
+      await ensureFirstUser(payload);
+
+      // Skips anything that already has content, so it can never overwrite
+      // an edit, and nobody has to remember to run a seed step by hand.
       const { created } = await runSeed(payload);
       if (created.length) {
         payload.logger.info(`[visgrow] Seeded content: ${created.join(", ")}`);
@@ -83,8 +104,9 @@ export default buildConfig({
       // alone don't reach content that's been seeded, and the CMS takes
       // priority over the code fallbacks.
       await runCorrections(payload);
+      payload.logger.info("[visgrow] Setup complete.");
     } catch (err) {
-      payload.logger.error({ err }, "[visgrow] Content seed failed");
+      payload.logger.error({ err }, "[visgrow] Setup failed");
     }
   },
 

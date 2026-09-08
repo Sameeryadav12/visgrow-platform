@@ -144,6 +144,20 @@ Vercel keeps every deployment, so rolling back is instant and doesn't require gi
 
 ## Deployment notes
 
+**One-time setup against a hosted database.** Schema creation and seeding run
+in `onInit`, which fires once on a long-running server but on *every cold
+start* of a serverless function — far longer than a request is allowed to take,
+so it made every cold start of the admin panel time out. It now skips itself on
+Vercel unless `RUN_SETUP=true`. To prepare a hosted database, point
+`.env.local` at it and run `npm run dev` once locally:
+
+```bash
+DATABASE_URI=<hosted connection string> npm run dev
+```
+
+Watch for `[visgrow] Setup complete.` in the output, then stop it. The hosted
+app reads and writes normally from that point on.
+
 **Schema.** `push: true` is set on the Postgres adapter. Payload only creates
 tables automatically when `NODE_ENV` isn't `production`, so without it a hosted
 deployment starts against an empty database — the admin panel 500s while the
