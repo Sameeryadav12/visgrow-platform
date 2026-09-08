@@ -28,6 +28,38 @@ import { runCorrections } from "./payload/seed/corrections";
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
 
+/**
+ * Postgres connection settings.
+ *
+ * Hosted providers hand you a URL with query parameters that node-postgres
+ * either doesn't understand or warns loudly about:
+ *
+ *  - `channel_binding` isn't supported and is rejected outright.
+ *  - `sslmode=require` still works, but the driver prints a deprecation
+ *    warning on every start because it treats it as an alias.
+ *
+ * So both are stripped and TLS is configured explicitly instead. Certificates
+ * are verified — the default `rejectUnauthorized: false` many guides suggest
+ * would leave the connection open to interception, which is not acceptable for
+ * a database holding enquiries and coaching notes.
+ *
+ * A local Docker Postgres has no TLS, so SSL is skipped for local hosts.
+ */
+function buildPool() {
+  const raw = process.env.DATABASE_URI || "";
+  const connectionString = raw
+    .replace(/[?&]channel_binding=[^&]*/g, "")
+    .replace(/[?&]sslmode=[^&]*/g, "")
+    .replace(/\?&/, "?")
+    .replace(/[?&]$/, "");
+
+  const isLocal = /@(localhost|127\.0\.0\.1|host\.docker\.internal)/.test(raw);
+
+  return isLocal
+    ? { connectionString }
+    : { connectionString, ssl: { rejectUnauthorized: true } };
+}
+
 export default buildConfig({
   admin: {
     user: Users.slug,
@@ -117,14 +149,7 @@ export default buildConfig({
   },
 
   db: postgresAdapter({
-    pool: {
-      // Neon appends `channel_binding=require`, which node-postgres does not
-      // understand and rejects. Everything still runs over TLS via sslmode.
-      connectionString: (process.env.DATABASE_URI || "").replace(
-        /[?&]channel_binding=[^&]*/,
-        "",
-      ),
-    },
+    pool: buildPool(),
     // Payload only creates tables automatically when NODE_ENV isn't
     // "production". On a hosted deployment it is, so the schema was never
     // built and every admin request failed while the public pages quietly
