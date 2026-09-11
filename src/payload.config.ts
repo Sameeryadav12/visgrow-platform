@@ -3,6 +3,7 @@ import { fileURLToPath } from "url";
 
 import { postgresAdapter } from "@payloadcms/db-postgres";
 import { lexicalEditor } from "@payloadcms/richtext-lexical";
+import { vercelBlobStorage } from "@payloadcms/storage-vercel-blob";
 import { buildConfig } from "payload";
 import sharp from "sharp";
 
@@ -11,6 +12,8 @@ import { Media } from "./payload/collections/Media";
 import { Enquiries } from "./payload/collections/Enquiries";
 import { Lessons } from "./payload/collections/Lessons";
 import { Students } from "./payload/collections/Students";
+import { StudentDocuments } from "./payload/collections/StudentDocuments";
+import { CoachingSessions } from "./payload/collections/CoachingSessions";
 import { Payments } from "./payload/collections/Payments";
 import { Testimonials } from "./payload/collections/Testimonials";
 import { Faqs } from "./payload/collections/Faqs";
@@ -90,12 +93,47 @@ export default buildConfig({
     Media,
     Lessons,
     Students,
+    CoachingSessions,
+    StudentDocuments,
     Enquiries,
     Payments,
     Users,
   ],
 
   globals: [HomePage, SiteSettings, Navigation, FooterGlobal],
+
+  /**
+   * File storage.
+   *
+   * On a serverless host the filesystem is read-only and rebuilt on every
+   * deploy, so anything uploaded through the admin panel would silently
+   * disappear the next time the site shipped. Vercel Blob keeps uploads
+   * outside the deployment.
+   *
+   * It only switches on when the token exists, so local development keeps
+   * writing to disk with no extra setup and no account required.
+   */
+  plugins: process.env.BLOB_READ_WRITE_TOKEN
+    ? [
+        vercelBlobStorage({
+          enabled: true,
+          token: process.env.BLOB_READ_WRITE_TOKEN,
+          // Non-negotiable here. The Payload adapter can only create *public*
+          // blobs, so the only thing protecting a file is how hard its URL is
+          // to guess. Without a random suffix, someone's resume would sit at a
+          // predictable path anyone could type. With it, the filename carries
+          // enough entropy that guessing is not a realistic attack.
+          addRandomSuffix: true,
+          collections: {
+            media: true,
+            // Customer files are stored here too, but their URL is never sent
+            // to a browser — /api/portal/file/[id] checks who is asking and
+            // fetches the bytes server-side. See that route for why.
+            "student-documents": true,
+          },
+        }),
+      ]
+    : [],
 
   editor: lexicalEditor(),
 

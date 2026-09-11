@@ -374,6 +374,99 @@ summary:focus-visible,
   outline-color: #fff;
 }
 
+
+/* ---------------------------------------------------------------- polish
+ *
+ * A craft layer added on top of the existing styles. Everything here is
+ * CSS-only and additive: no colour, font, spacing or component style is
+ * changed, so nothing that already looks right can start looking different.
+ * All of it is switched off by the reduced-motion block further down.
+ */
+
+/* Children of a revealed section arrive one after another rather than all
+   at once. Roughly 70ms apart — enough to read as deliberate, short enough
+   that nobody waits for it. */
+.reveal-stagger.in > * {
+  animation: riseIn 0.5s ease both;
+}
+.reveal-stagger.in > *:nth-child(1) { animation-delay: 0.00s; }
+.reveal-stagger.in > *:nth-child(2) { animation-delay: 0.07s; }
+.reveal-stagger.in > *:nth-child(3) { animation-delay: 0.14s; }
+.reveal-stagger.in > *:nth-child(4) { animation-delay: 0.21s; }
+.reveal-stagger.in > *:nth-child(5) { animation-delay: 0.28s; }
+.reveal-stagger.in > *:nth-child(6) { animation-delay: 0.35s; }
+
+@keyframes riseIn {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* A slow sheen across primary buttons on hover. The gradient is the brand
+   one already in use; this only moves light across it. */
+.btn-shine {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+.btn-shine::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-120%);
+  background: linear-gradient(
+    100deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.35) 50%,
+    transparent 70%
+  );
+  transition: transform 0.7s ease;
+  pointer-events: none;
+}
+.btn-shine:hover::after {
+  transform: translateX(120%);
+}
+
+/* The hero gradient drifts very slowly. 18 seconds is long enough that it
+   reads as depth rather than animation. */
+.gradient-drift {
+  background-size: 180% 180%;
+  animation: driftBg 18s ease-in-out infinite;
+}
+
+@keyframes driftBg {
+  0%, 100% { background-position: 0% 50%; }
+  50%      { background-position: 100% 50%; }
+}
+
+/* Keyboard focus. Previously inherited the browser default, which is hard
+   to see against the brand purple. */
+:where(a, button, input, textarea, select, [tabindex]):focus-visible {
+  outline: 3px solid var(--color-purple);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+/* Reading-progress bar for long pages. Scroll-driven animation where the
+   browser supports it; where it doesn't, the bar simply never appears. */
+@supports (animation-timeline: scroll()) {
+  .read-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 3px;
+    width: 100%;
+    transform-origin: 0 50%;
+    background: var(--gradient-brand);
+    z-index: 200;
+    animation: growProgress linear both;
+    animation-timeline: scroll();
+  }
+  @keyframes growProgress {
+    from { transform: scaleX(0); }
+    to   { transform: scaleX(1); }
+  }
+}
+
 /*
  * This site moves a lot: a scrolling logo ticker, a typewriter headline,
  * counting numbers, scroll reveals and a pulsing button. For someone with a
@@ -393,9 +486,22 @@ summary:focus-visible,
 
   .ticker,
   .floating-el,
+  .gradient-drift,
+  .read-progress,
   .card-lift:hover {
     animation: none !important;
     transform: none !important;
+  }
+
+  /* Staggered children must end up visible, not stuck mid-animation. */
+  .reveal-stagger.in > * {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .btn-shine::after {
+    display: none !important;
   }
 
   /* Scroll-revealed sections must stay visible, or the page looks empty. */

@@ -24,6 +24,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
     // Lead magnet — worth ranking for.
     { path: "/masterclass", priority: 0.8, freq: "monthly" },
+    // Free, genuinely useful, and the main way strangers find the site.
+    { path: "/scorecard", priority: 0.9, freq: "monthly" },
 
     // Other audiences.
     { path: "/employers", priority: 0.8, freq: "monthly" },

@@ -5,6 +5,7 @@ import FaqAccordion from "@/components/FaqAccordion";
 import PartnerEnquiryForm from "@/components/PartnerEnquiryForm";
 import { getSiteSettings } from "@/lib/cms";
 import { getPageCopy, t, list, texts } from "@/lib/page-copy";
+import GoogleReviews from "@/components/GoogleReviews";
 
 export const metadata: Metadata = {
   title: "Career & Employability Services for Education Providers | Visgrow",
@@ -350,6 +351,11 @@ export default async function EducationPartnersPage() {
           </ul>
         </div>
       </section>
+
+      {/* Real Google reviews only. No education-partner testimonials exist
+          yet, and inventing them is illegal as well as wrong — this section
+          simply doesn't render until there's something genuine to show. */}
+      <GoogleReviews heading="What people say about working with us" />
 
       {/* ============ 6 · HOW TO IMPLEMENT ============ */}
       <section className="bg-white py-24 reveal" aria-labelledby="ep-how">

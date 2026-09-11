@@ -3,7 +3,13 @@ import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { getPayload } from "payload";
 import config from "@payload-config";
-import { getCurrentStudent, unlockedThrough, unlocksOn } from "@/lib/lms-auth";
+import {
+  getCurrentStudent,
+  unlockedThrough,
+  unlocksOn,
+  hasAcceleratorAccess,
+  getStudentProgramSlugs,
+} from "@/lib/lms-auth";
 import DayComplete from "@/components/DayComplete";
 import { getSiteSettings } from "@/lib/cms";
 
@@ -22,6 +28,11 @@ export default async function DayPage({
 }) {
   const student = await getCurrentStudent();
   if (!student) redirect("/sign-in");
+
+  // Being signed in is not enough — this is the paid Accelerator, and a
+  // coaching-only customer must not be able to read it by typing the URL.
+  const slugs = await getStudentProgramSlugs(student);
+  if (!hasAcceleratorAccess(student, slugs)) redirect("/portal");
 
   const day = Number((await params).day);
   if (!Number.isInteger(day) || day < 1) notFound();

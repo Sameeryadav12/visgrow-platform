@@ -75,6 +75,8 @@ export interface Config {
     media: Media;
     lessons: Lesson;
     students: Student;
+    'coaching-sessions': CoachingSession;
+    'student-documents': StudentDocument;
     enquiries: Enquiry;
     payments: Payment;
     users: User;
@@ -93,6 +95,8 @@ export interface Config {
     media: MediaSelect<false> | MediaSelect<true>;
     lessons: LessonsSelect<false> | LessonsSelect<true>;
     students: StudentsSelect<false> | StudentsSelect<true>;
+    'coaching-sessions': CoachingSessionsSelect<false> | CoachingSessionsSelect<true>;
+    'student-documents': StudentDocumentsSelect<false> | StudentDocumentsSelect<true>;
     enquiries: EnquiriesSelect<false> | EnquiriesSelect<true>;
     payments: PaymentsSelect<false> | PaymentsSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
@@ -690,7 +694,7 @@ export interface Lesson {
   createdAt: string;
 }
 /**
- * People enrolled in the 14-Day Accelerator. Add someone here once they've paid and they can sign in straight away.
+ * Everyone who has bought something. Add someone here once they've paid and they can sign in to their portal straight away.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "students".
@@ -703,9 +707,17 @@ export interface Student {
    */
   email: string;
   /**
-   * Day 1 opens on this date, Day 2 the next day, and so on. Change it to move their whole schedule.
+   * Decides what they see in their portal. Someone with the Accelerator gets the daily lessons; everyone gets their files and sessions.
    */
-  startDate: string;
+  programs?: (number | Program)[] | null;
+  /**
+   * Optional. Only for you — never shown publicly.
+   */
+  phone?: string | null;
+  /**
+   * Day 1 opens on this date, Day 2 the next day, and so on. Leave blank if they haven't bought the Accelerator.
+   */
+  startDate?: string | null;
   status: 'active' | 'paused' | 'finished' | 'revoked';
   /**
    * Overrides the daily schedule. Useful for someone catching up, or for previewing the program yourself.
@@ -719,6 +731,10 @@ export interface Student {
    * Updated automatically as they work through the program.
    */
   completedDays?: number[] | null;
+  /**
+   * Sends once, when you first save this person. Untick if you'd rather tell them yourself.
+   */
+  sendWelcome?: boolean | null;
   /**
    * Never shown to the student.
    */
@@ -800,6 +816,80 @@ export interface Enquiry {
   notes?: string | null;
   updatedAt: string;
   createdAt: string;
+}
+/**
+ * One-to-one sessions you've agreed with someone. Adding one here puts it in their portal with the link and the prep.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "coaching-sessions".
+ */
+export interface CoachingSession {
+  id: number;
+  student: number | Student;
+  /**
+   * E.g. 'Career strategy session' or 'Mock interview — round 2'.
+   */
+  title: string;
+  /**
+   * Adelaide time.
+   */
+  scheduledFor: string;
+  status: 'booked' | 'done' | 'cancelled';
+  /**
+   * Zoom, Teams, Meet — whatever you're using. Shown as a button in their portal. Leave blank for in-person.
+   */
+  meetingLink?: string | null;
+  /**
+   * Only if you're meeting in person.
+   */
+  location?: string | null;
+  /**
+   * Shown before the session. Someone who turns up prepared gets more out of it — and tells people so.
+   */
+  prep?: string | null;
+  /**
+   * Shown to them after the session is marked Done. Their record of what to do next.
+   */
+  outcome?: string | null;
+  /**
+   * Never shown to them.
+   */
+  privateNotes?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Files you're handing back to one person — a marked-up resume, a session summary, a worksheet. They appear in that person's portal straight away.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "student-documents".
+ */
+export interface StudentDocument {
+  id: number;
+  /**
+   * Only this person will ever see this file.
+   */
+  student: number | Student;
+  /**
+   * Write it the way they'd recognise it. 'Your resume — reviewed' beats 'resume_v3_final'.
+   */
+  title: string;
+  kind: 'feedback' | 'template' | 'summary' | 'invoice' | 'other';
+  /**
+   * Shown under the file in their portal. One sentence telling them what to do with it.
+   */
+  note?: string | null;
+  updatedAt: string;
+  createdAt: string;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
 }
 /**
  * Every payment taken through the website. Written automatically by Stripe — these can't be edited, so they stay trustworthy.
@@ -923,6 +1013,14 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'students';
         value: number | Student;
+      } | null)
+    | ({
+        relationTo: 'coaching-sessions';
+        value: number | CoachingSession;
+      } | null)
+    | ({
+        relationTo: 'student-documents';
+        value: number | StudentDocument;
       } | null)
     | ({
         relationTo: 'enquiries';
@@ -1284,11 +1382,14 @@ export interface LessonsSelect<T extends boolean = true> {
 export interface StudentsSelect<T extends boolean = true> {
   name?: T;
   email?: T;
+  programs?: T;
+  phone?: T;
   startDate?: T;
   status?: T;
   unlockEverything?: T;
   enquiry?: T;
   completedDays?: T;
+  sendWelcome?: T;
   notes?: T;
   lastSeen?: T;
   pausedAt?: T;
@@ -1297,6 +1398,44 @@ export interface StudentsSelect<T extends boolean = true> {
   loginTokenExpires?: T;
   updatedAt?: T;
   createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "coaching-sessions_select".
+ */
+export interface CoachingSessionsSelect<T extends boolean = true> {
+  student?: T;
+  title?: T;
+  scheduledFor?: T;
+  status?: T;
+  meetingLink?: T;
+  location?: T;
+  prep?: T;
+  outcome?: T;
+  privateNotes?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "student-documents_select".
+ */
+export interface StudentDocumentsSelect<T extends boolean = true> {
+  student?: T;
+  title?: T;
+  kind?: T;
+  note?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  url?: T;
+  thumbnailURL?: T;
+  filename?: T;
+  mimeType?: T;
+  filesize?: T;
+  width?: T;
+  height?: T;
+  focalX?: T;
+  focalY?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

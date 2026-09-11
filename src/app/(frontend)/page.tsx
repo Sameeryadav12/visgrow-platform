@@ -6,6 +6,8 @@ import TestimonialCarousel from "@/components/TestimonialCarousel";
 import CountUp from "@/components/CountUp";
 import FaqAccordion from "@/components/FaqAccordion";
 import EnquiryForm from "@/components/EnquiryForm";
+import WaitingCost from "@/components/WaitingCost";
+import GoogleReviews from "@/components/GoogleReviews";
 import {
   getSiteSettings,
   getCompanyLogos,
@@ -399,7 +401,7 @@ export default async function Home() {
         {/* The right-hand side was too transparent — faces in the photo competed
             with the headline and the whole thing read muddy. Heavier on the
             right so the image works as texture, not as a second subject. */}
-        <div className="absolute inset-0 -z-10 bg-[linear-gradient(100deg,rgba(45,12,80,0.97)_0%,rgba(105,24,220,0.92)_38%,rgba(182,37,185,0.84)_68%,rgba(233,75,108,0.74)_100%)]" />
+        <div className="gradient-drift absolute inset-0 -z-10 bg-[linear-gradient(100deg,rgba(45,12,80,0.97)_0%,rgba(105,24,220,0.92)_38%,rgba(182,37,185,0.84)_68%,rgba(233,75,108,0.74)_100%)]" />
         <div className="absolute inset-0 -z-10 bg-[linear-gradient(to_bottom,rgba(36,26,51,0.18)_0%,transparent_35%,transparent_70%,rgba(36,26,51,0.22)_100%)]" />
         <div className="absolute inset-0 -z-10 [background:radial-gradient(circle_at_15%_20%,rgba(255,255,255,0.22),transparent_42%),radial-gradient(circle_at_88%_75%,rgba(246,168,61,0.3),transparent_48%)]" />
 
@@ -443,6 +445,20 @@ export default async function Home() {
               View Pricing
             </Link>
           </div>
+
+          {/* The free way in. Someone who isn't ready to buy will not click
+              "View Pricing" — but they will spend two minutes finding out
+              what's wrong, and that's who most of this traffic is. */}
+          <p className="mb-14 -mt-8 text-[14.5px] font-semibold text-white/90">
+            Not sure where you stand?{" "}
+            <Link
+              href="/scorecard"
+              className="font-extrabold text-white underline decoration-white/50 underline-offset-4 transition-colors hover:decoration-white"
+            >
+              Take the free 2-minute scorecard
+            </Link>{" "}
+            — no sign-up.
+          </p>
 
           <ul className="flex flex-wrap gap-x-10 gap-y-4">
             {[
@@ -651,6 +667,30 @@ export default async function Home() {
         </div>
       </section>
 
+      {/* ============ 4b · WHAT THE WAIT COSTS ============ */}
+      {/* Sits immediately after the consequences list on purpose: the list
+          says waiting is expensive, this makes them work out their own
+          number. Theirs is far more persuasive than ours. */}
+      <section
+        className="bg-brand-lavender py-20 reveal"
+        aria-labelledby="waiting-cost-heading"
+      >
+        <div className="mx-auto max-w-[1100px] px-6 lg:px-10">
+          <div className="mx-auto mb-10 max-w-[620px] text-center">
+            <span className="mb-3 block text-[13px] font-extrabold uppercase tracking-[2px] text-brand-pink">
+              The part nobody adds up
+            </span>
+            <h2
+              id="waiting-cost-heading"
+              className="text-[clamp(26px,3.4vw,40px)] leading-[1.1] text-[var(--color-ink)]"
+            >
+              Every month you guess has a price.
+            </h2>
+          </div>
+          <WaitingCost />
+        </div>
+      </section>
+
       {/* ============ FREE MASTERCLASS — LEAD MAGNET ============ */}
       <section id="masterclass" className="scroll-mt-24 bg-brand-deep py-24 text-white reveal" aria-labelledby="masterclass-heading">
         <div className="mx-auto grid max-w-[1180px] items-center gap-14 px-6 lg:grid-cols-[1.05fr_0.95fr] lg:px-10">
@@ -819,6 +859,12 @@ export default async function Home() {
         <TestimonialCarousel items={stories} />
       </section>
 
+      {/* Real Google reviews, straight from the Business Profile. Renders
+          nothing at all until the API credentials are set — there is no
+          placeholder, because an empty reviews block advertises that nobody
+          has reviewed you. */}
+      <GoogleReviews />
+
       {/* ============ 6 · HOW TO IMPLEMENT ============ */}
       <section id="how" className="scroll-mt-24 bg-white py-24 reveal" aria-labelledby="how-heading">
         <div className="mx-auto max-w-[1240px] px-6 lg:px-10">
@@ -830,7 +876,7 @@ export default async function Home() {
               Your path from stuck to job-ready.
             </h2>
           </div>
-          <ol className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+          <ol className="reveal-stagger in grid gap-6 md:grid-cols-2 lg:grid-cols-4">
             {steps.map((s) => (
               <li key={s.n} className="rounded-[18px] border border-[var(--color-line)] bg-white p-7 card-lift">
                 <span className="mb-5 block text-[40px] leading-none text-brand-gradient" style={{ fontFamily: "var(--font-heading)" }}>

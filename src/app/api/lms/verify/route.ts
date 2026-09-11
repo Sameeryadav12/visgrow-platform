@@ -51,7 +51,9 @@ export async function GET(request: Request) {
     });
 
     await startSession(student.id);
-    return NextResponse.redirect(`${SITE}/my-program`);
+    // Land on the portal, not the lesson list — a customer may have bought
+    // coaching rather than the Accelerator, and the portal routes them either way.
+    return NextResponse.redirect(`${SITE}/portal`);
   } catch (err) {
     console.error("[visgrow:lms] verify failed:", err);
     return fail("error");

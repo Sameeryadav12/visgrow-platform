@@ -7,6 +7,7 @@ import AudiencePopup from "@/components/AudiencePopup";
 import BackToTop from "@/components/BackToTop";
 import ScrollReveal from "@/components/ScrollReveal";
 import StickyCta from "@/components/StickyCta";
+import PublicChrome from "@/components/PublicChrome";
 import { getNavigation, getSiteSettings } from "@/lib/cms";
 
 const bebas = localFont({
@@ -58,27 +59,31 @@ export default async function RootLayout({
           Skip to main content
         </a>
 
-        <Header
-          nav={nav?.items ?? undefined}
-          ctaLabel={nav?.ctaLabel ?? undefined}
-          ctaHref={nav?.ctaHref ?? undefined}
-          phone={settings?.phone ?? undefined}
-        />
+        <PublicChrome>
+          <Header
+            nav={nav?.items ?? undefined}
+            ctaLabel={nav?.ctaLabel ?? undefined}
+            ctaHref={nav?.ctaHref ?? undefined}
+            phone={settings?.phone ?? undefined}
+          />
+        </PublicChrome>
         <main id="main" className="flex-1 flex flex-col">
           {children}
         </main>
-        <Footer />
-        <AudiencePopup
-          enabled={settings?.audiencePopupEnabled ?? true}
-          heading={settings?.audiencePopupHeading ?? undefined}
-          subheading={settings?.audiencePopupSubheading ?? undefined}
-        />
+        <PublicChrome>
+          <Footer />
+          <AudiencePopup
+            enabled={settings?.audiencePopupEnabled ?? true}
+            heading={settings?.audiencePopupHeading ?? undefined}
+            subheading={settings?.audiencePopupSubheading ?? undefined}
+          />
+          <StickyCta
+            enabled={settings?.stickyCtaEnabled ?? true}
+            text={settings?.stickyCtaText ?? undefined}
+          />
+        </PublicChrome>
         <BackToTop />
         <ScrollReveal />
-        <StickyCta
-          enabled={settings?.stickyCtaEnabled ?? true}
-          text={settings?.stickyCtaText ?? undefined}
-        />
       </body>
     </html>
   );

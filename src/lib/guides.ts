@@ -15,8 +15,22 @@ export type Block =
   | { p: string }
   | { ul: string[] };
 
+export type Topic =
+  | "Job search"
+  | "Resumes"
+  | "Interviews"
+  | "Networking"
+  | "Internships"
+  | "Study & habits"
+  | "For employers"
+  | "For institutions";
+
 export type Guide = {
   slug: string;
+  /** Drives the filter chips on the Resources page. */
+  topic: Topic;
+  /** Date shown on the card. */
+  published: string;
   title: string;
   blurb: string;
   audience: "students" | "employers" | "education-partners";
@@ -31,6 +45,8 @@ export const guides: Guide[] = [
   // ------------------------------------------------- students & graduates
   {
     slug: "effective-job-search-strategies",
+    topic: "Job search",
+    published: "2026-02-03",
     title: "Effective job search strategies",
     blurb: "Why applying harder isn't working, and what to do instead of refreshing Seek.",
     audience: "students",
@@ -80,6 +96,8 @@ export const guides: Guide[] = [
   },
   {
     slug: "resume-writing-tips",
+    topic: "Resumes",
+    published: "2026-02-10",
     title: "Resume writing tips",
     blurb: "Structure, formatting and achievement statements — and what recruiters look at first.",
     audience: "students",
@@ -132,6 +150,8 @@ export const guides: Guide[] = [
   },
   {
     slug: "tailoring-your-resume",
+    topic: "Resumes",
+    published: "2026-02-17",
     title: "Tailoring your resume to a particular role",
     blurb: "How to address selection criteria and use keywords without sounding like a robot.",
     audience: "students",
@@ -172,6 +192,8 @@ export const guides: Guide[] = [
   },
   {
     slug: "how-to-prepare-for-a-job-interview",
+    topic: "Interviews",
+    published: "2026-02-24",
     title: "How to prepare for a job interview",
     blurb: "Research, presentation, structure — and the question every interview opens with.",
     audience: "students",
@@ -223,6 +245,8 @@ export const guides: Guide[] = [
   },
   {
     slug: "job-interview-follow-up",
+    topic: "Interviews",
+    published: "2026-03-03",
     title: "Job interview follow-up",
     blurb: "What to send, when to send it, and how to follow up after silence without pestering.",
     audience: "students",
@@ -259,6 +283,8 @@ export const guides: Guide[] = [
   },
   {
     slug: "are-cover-letters-still-worth-writing",
+    topic: "Resumes",
+    published: "2026-03-10",
     title: "Are cover letters still worth writing?",
     blurb: "When they matter, when they don't, and how to write one that adds something.",
     audience: "students",
@@ -302,6 +328,8 @@ export const guides: Guide[] = [
   },
   {
     slug: "common-job-search-mistakes",
+    topic: "Job search",
+    published: "2026-03-17",
     title: "Common job search mistakes",
     blurb: "No plan, no questions, no networking, no feedback — and staying reactive.",
     audience: "students",
@@ -327,6 +355,8 @@ export const guides: Guide[] = [
   },
   {
     slug: "why-networking-matters",
+    topic: "Networking",
+    published: "2026-03-24",
     title: "Why networking matters and how to do it properly",
     blurb: "Where to find the right rooms, and how to open a conversation that goes somewhere.",
     audience: "students",
@@ -352,6 +382,8 @@ export const guides: Guide[] = [
   },
   {
     slug: "beating-procrastination",
+    topic: "Study & habits",
+    published: "2026-03-31",
     title: "How to get rid of procrastination in five steps",
     blurb: "Set the tone, organise the routine, take small steps, cut distraction, visualise the reward.",
     audience: "students",
@@ -375,6 +407,8 @@ export const guides: Guide[] = [
   },
   {
     slug: "making-the-best-of-studying-online",
+    topic: "Study & habits",
+    published: "2026-04-07",
     title: "How to make the best of studying online",
     blurb: "Staying engaged, staying visible and staying connected when you're not on campus.",
     audience: "students",
@@ -397,6 +431,8 @@ export const guides: Guide[] = [
   },
   {
     slug: "why-volunteering-is-good-for-your-career",
+    topic: "Networking",
+    published: "2026-04-14",
     title: "Why volunteering is good for your career",
     blurb: "Discovering what you like, testing career possibilities and expanding your network.",
     audience: "students",
@@ -421,6 +457,8 @@ export const guides: Guide[] = [
   },
   {
     slug: "make-the-best-of-your-internship",
+    topic: "Internships",
+    published: "2026-04-21",
     title: "How to make the best out of your internship",
     blurb: "Turning a placement into skills, relationships and a reference worth having.",
     audience: "students",
@@ -447,6 +485,8 @@ export const guides: Guide[] = [
   },
   {
     slug: "turn-your-internship-into-a-full-time-job",
+    topic: "Internships",
+    published: "2026-04-28",
     title: "How to turn your internship into a full-time job",
     blurb: "Informational interviews, referrals, and becoming the obvious person to keep.",
     audience: "students",
@@ -471,6 +511,8 @@ export const guides: Guide[] = [
   },
   {
     slug: "five-practices-that-prevent-internship-success",
+    topic: "Internships",
+    published: "2026-05-05",
     title: "Five practices that prevent internship success",
     blurb: "The habits that quietly stop a placement turning into anything.",
     audience: "students",
@@ -495,6 +537,8 @@ export const guides: Guide[] = [
   // ------------------------------------------------------------- employers
   {
     slug: "why-internship-programs-are-worth-running",
+    topic: "For employers",
+    published: "2026-05-12",
     title: "Why internship programs are worth running",
     blurb: "Finding future employees, lifting productivity and building leadership in your current team.",
     audience: "employers",
@@ -523,6 +567,8 @@ export const guides: Guide[] = [
   },
   {
     slug: "employability-skills-australian-businesses-look-for",
+    topic: "For employers",
+    published: "2026-05-19",
     title: "Employability skills Australian businesses look for",
     blurb: "What hiring managers actually screen for beyond the qualification.",
     audience: "employers",
@@ -547,6 +593,8 @@ export const guides: Guide[] = [
   },
   {
     slug: "learning-at-work",
+    topic: "For employers",
+    published: "2026-05-26",
     title: "Learning at work — and why most of it doesn't stick",
     blurb: "Setting objectives, defining strategy, building support and maintaining progress.",
     audience: "employers",
@@ -572,6 +620,8 @@ export const guides: Guide[] = [
   // ---------------------------------------------------- education partners
   {
     slug: "why-internships-matter-to-graduate-outcomes",
+    topic: "For institutions",
+    published: "2026-06-02",
     title: "Why internships matter to graduate outcomes",
     blurb: "The link between real work experience and how quickly your graduates convert.",
     audience: "education-partners",
@@ -600,6 +650,8 @@ export const guides: Guide[] = [
   },
   {
     slug: "building-employability-into-the-student-experience",
+    topic: "For institutions",
+    published: "2026-06-09",
     title: "Building employability into the student experience",
     blurb: "Where career support has the most impact, and when in the journey to deliver it.",
     audience: "education-partners",
@@ -627,6 +679,12 @@ export const guides: Guide[] = [
     ],
   },
 ];
+
+export const topics = (): Topic[] => {
+  const seen = new Set<Topic>();
+  for (const g of guides) if (g.body?.length) seen.add(g.topic);
+  return [...seen];
+};
 
 export const guideBySlug = (slug: string) => guides.find((g) => g.slug === slug);
 export const publishedGuides = () => guides.filter((g) => g.body?.length);

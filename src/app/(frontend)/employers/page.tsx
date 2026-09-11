@@ -5,6 +5,7 @@ import FaqAccordion from "@/components/FaqAccordion";
 import PartnerEnquiryForm from "@/components/PartnerEnquiryForm";
 import { getSiteSettings } from "@/lib/cms";
 import { getPageCopy, t, list, texts } from "@/lib/page-copy";
+import GoogleReviews from "@/components/GoogleReviews";
 
 export const metadata: Metadata = {
   title: "Workforce Capability Development for Employers | Visgrow Adelaide",
@@ -372,6 +373,11 @@ export default async function EmployersPage() {
           </div>
         </div>
       </section>
+
+      {/* Real Google reviews. Mustafa has no employer testimonials yet, so
+          rather than inventing any, this shows whatever Google actually
+          holds — and shows nothing until there is something to show. */}
+      <GoogleReviews heading="What people say about working with us" />
 
       {/* ============ 6 · HOW TO IMPLEMENT ============ */}
       <section className="bg-white py-24 reveal" aria-labelledby="emp-how">

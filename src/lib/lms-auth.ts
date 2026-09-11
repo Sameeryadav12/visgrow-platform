@@ -95,6 +95,57 @@ export async function getCurrentStudent(): Promise<Student | null> {
   }
 }
 
+/** Program slugs that unlock the day-by-day lesson area. */
+const ACCELERATOR_SLUGS = ["14-day-accelerator"];
+
+/**
+ * Has this person actually bought the Accelerator?
+ *
+ * Being signed in is not the same as having paid for this particular thing.
+ * Someone who bought a single coaching session has a valid account, and
+ * without this check they could read the entire paid 14-day program by
+ * typing the URL.
+ *
+ * The programs are ids on the student record, so this needs the resolved
+ * program documents passed in.
+ *
+ * Records created before programs were tracked have nothing listed against
+ * them. Those are grandfathered in on the strength of their start date —
+ * locking out existing paying students to close a hole they never used
+ * would be the worse failure.
+ */
+export function hasAcceleratorAccess(
+  student: Student,
+  programSlugs: string[],
+): boolean {
+  if (programSlugs.some((s) => ACCELERATOR_SLUGS.includes(s))) return true;
+  const nothingRecorded = !student.programs || student.programs.length === 0;
+  return nothingRecorded && Boolean(student.startDate);
+}
+
+/** Resolves a student's program slugs, for use with hasAcceleratorAccess. */
+export async function getStudentProgramSlugs(
+  student: Student,
+): Promise<string[]> {
+  const ids = (student.programs ?? [])
+    .map((p) => (typeof p === "object" ? p.id : p))
+    .filter(Boolean);
+  if (!ids.length) return [];
+
+  try {
+    const payload = await getPayload({ config });
+    const found = await payload.find({
+      collection: "programs",
+      where: { id: { in: ids } },
+      limit: 20,
+      depth: 0,
+    });
+    return found.docs.map((p) => p.slug);
+  } catch {
+    return [];
+  }
+}
+
 /**
  * Which days this student can open right now.
  *
