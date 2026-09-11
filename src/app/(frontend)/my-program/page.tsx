@@ -3,7 +3,13 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getPayload } from "payload";
 import config from "@payload-config";
-import { getCurrentStudent, unlockedThrough, unlocksOn } from "@/lib/lms-auth";
+import {
+  getCurrentStudent,
+  unlockedThrough,
+  unlocksOn,
+  hasAcceleratorAccess,
+  getStudentProgramSlugs,
+} from "@/lib/lms-auth";
 
 export const metadata: Metadata = {
   title: "My program | Visgrow",
@@ -20,6 +26,11 @@ const dayLabel = (d: Date) =>
 export default async function MyProgramPage() {
   const student = await getCurrentStudent();
   if (!student) redirect("/sign-in");
+
+  // Being signed in is not enough — this is the paid Accelerator, and a
+  // coaching-only customer must not be able to read it by typing the URL.
+  const slugs = await getStudentProgramSlugs(student);
+  if (!hasAcceleratorAccess(student, slugs)) redirect("/portal");
 
   const payload = await getPayload({ config });
   const { docs: lessons } = await payload.find({
@@ -57,19 +68,21 @@ export default async function MyProgramPage() {
                 Good to see you, {firstName}.
               </h1>
             </div>
-            <a
-              href="/api/lms/logout"
+            <Link
+              href="/portal"
               className="rounded-full border border-white/40 bg-white/15 px-5 py-2.5 text-[13px] font-bold text-white transition-colors hover:bg-white/25"
             >
-              Sign out
-            </a>
+              ← Back to your portal
+            </Link>
           </div>
 
           {/* progress */}
           <div className="mt-8 max-w-[520px]">
             <div className="mb-2 flex items-baseline justify-between text-[13px] font-semibold">
               <span>
-                {completed} of {lessons.length} days done
+                {lessons.length
+                  ? `${completed} of ${lessons.length} days done`
+                  : "Program coming soon"}
               </span>
               <span className="text-white/80">{percent}%</span>
             </div>

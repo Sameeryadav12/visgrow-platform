@@ -12,6 +12,39 @@ Each released version is a git tag, so any of them can be checked out or redeplo
 
 ---
 
+## [1.2.0] — 2026-09-12
+
+### Added
+- **Free Job-Readiness Scorecard at `/scorecard`** — twelve questions, five scored areas, instant personalised result with the single weakest area named and one free action to take this week. No sign-up, and the full result is shown before any email is requested. Completed scorecards land in the CRM with the score breakdown and a warmth rating, so a sales call starts with the diagnosis already done.
+- **Cost-of-waiting calculator** on the home page, directly after the consequences section — the visitor works out their own number rather than being told one.
+- **Real Google reviews** via the Places API, on the home, employers and education-partner pages. Renders nothing at all until `GOOGLE_PLACES_API_KEY` and `GOOGLE_PLACE_ID` are set. There is deliberately no placeholder or sample data.
+- **Polish layer** — staggered section reveals, a slow drift on the hero gradient, a sheen on primary buttons, visible keyboard focus rings, and a scroll-linked reading progress bar where the browser supports it. All CSS-only, and all disabled under `prefers-reduced-motion`.
+
+### Notes
+- Fabricated reviews were requested and declined. Inventing customer reviews breaches the Australian Consumer Law, and presenting invented text as a Google review would also misrepresent Google. Where no genuine testimonials exist — employers and education partners — the pages lean on the founder's verifiable credentials instead, and the reviews section stays hidden until there is something real to show.
+- The scorecard measures preparation, never predicts outcomes, and says so on the page, in the result and in the email.
+
+---
+
+## [1.1.0] — 2026-09-09
+
+### Added
+- **Customer portal at `/portal`** — one signed-in area for everyone who has bought something, not only Accelerator students. Overview with a single next action, program progress, files, sessions and account details.
+- **Customer files** — a private upload collection. Files are stored outside `public/`, the collection is admin-only for reads, and `/api/portal/file/[id]` verifies both the session and the document's owner before streaming the file.
+- **Sessions** — one-to-one bookings recorded by Visgrow, showing the customer when it is, what to bring, the join link, and what was agreed afterwards.
+- Customers can now have multiple programs recorded against them, which decides what their portal shows.
+- **Vercel Blob storage** for media and customer files, so uploads survive a deploy instead of disappearing with the filesystem. Off unless `BLOB_READ_WRITE_TOKEN` is set, so local development is unchanged.
+- **Welcome email** on creating a customer, telling them their portal exists and how to get in. Sends once, and can be turned off per person before saving.
+
+### Changed
+- Sign-in lands on `/portal` instead of the Accelerator lesson list, and its copy no longer assumes the Accelerator.
+- The `students` collection is labelled "Customers" in the admin panel, and the Accelerator start date is optional — someone who bought coaching only doesn't have one.
+
+### Fixed
+- The three Resources dropdown links did nothing. They pointed at `#hash` anchors on a page the user was often already on, which Next.js does not treat as a navigation. They now use `?for=` and the correction pass rewrites the saved navigation in the database, which previously it never touched.
+
+---
+
 ## [1.0.0] — 2026-09-07
 
 First complete build, ready for client review.

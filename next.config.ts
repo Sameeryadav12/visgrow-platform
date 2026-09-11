@@ -47,6 +47,17 @@ const nextConfig: NextConfig = {
         source: "/admin/:path*",
         headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }],
       },
+      {
+        // The signed-in areas. The pages already set a noindex meta tag, but
+        // a header also covers non-HTML responses and file downloads, and
+        // no-store stops a customer's own page being served to the next
+        // person from a shared cache or a browser's back button.
+        source: "/:path(portal|my-program)/:rest*",
+        headers: [
+          { key: "X-Robots-Tag", value: "noindex, nofollow" },
+          { key: "Cache-Control", value: "private, no-store, max-age=0" },
+        ],
+      },
     ];
   },
 };

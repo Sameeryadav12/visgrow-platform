@@ -33,6 +33,20 @@ Programs, prices, testimonials, FAQs, page copy, navigation, footer and site set
 ### CRM
 Every enquiry lands as a record with a status pipeline, a follow-up date, a warmth rating and an automatic contact history — status changes are logged by the system rather than relying on someone remembering to type them. Marking a lead as enrolled provisions their program access automatically.
 
+### Job-Readiness Scorecard
+A free twelve-question diagnostic at `/scorecard`. It scores five areas — direction, resume, interviews, network, local experience — and returns the single weakest one with a free action to take this week.
+
+Every question asks what the person has *done*, not how they feel, because a self-rated confidence score flatters people rather than helping them. Scoring is local and transparent: no model, no API, nothing that could produce a claim we'd have to defend later. The score is recalculated server-side from the raw answers rather than trusting the browser, since the result becomes a CRM record Mustafa acts on.
+
+The full result is shown before any email is asked for. Gating it would capture more addresses and convince fewer people, and the site's argument is that Visgrow tells you the truth before asking you for anything.
+
+### Customer portal
+One signed-in area at `/portal` for everyone who has bought something, not just Accelerator students. It shows a single next action, their program progress, files handed back to them, and their booked sessions with prep notes and a join link.
+
+Private files live outside `public/` and are served by a route that verifies the session and the document's owner before streaming the bytes — the collection itself is admin-only for reads, so there is no public API path to someone else's resume.
+
+Sessions are recorded rather than self-booked. Scheduling is agreed in the sales conversation that is already happening; adding a booking engine would have added a calendar integration to solve a problem that doesn't exist.
+
 ### Learning platform
 Passwordless sign-in via HMAC-signed session cookies with `timingSafeEqual` comparison. Lessons unlock one per day from the student's start date, honouring pauses. Access is re-checked against student status on every request, so revocation is immediate. Lesson documents are admin-read-only, because they hold unlisted video IDs — public API read access would give away the paid product.
 
@@ -86,6 +100,8 @@ A step-by-step version of this, written for a non-technical reader, is in [SETUP
 | `RESEND_API_KEY` / `EMAIL_FROM` / `EMAIL_TO` | Transactional email |
 | `STRIPE_SECRET_KEY` / `STRIPE_WEBHOOK_SECRET` | Card payments — leave blank to disable |
 | `CRON_SECRET` | Authorises the daily digest route |
+| `BLOB_READ_WRITE_TOKEN` | Vercel Blob file storage — leave blank locally to write to disk |
+| `GOOGLE_PLACES_API_KEY` / `GOOGLE_PLACE_ID` | Real Google reviews — leave blank and the reviews section doesn't render |
 
 ---
 
@@ -96,6 +112,8 @@ A step-by-step version of this, written for a non-technical reader, is in [SETUP
 **ISR.** The frontend layout sets `revalidate = 60`, so a CMS edit appears within about a minute with no rebuild or redeploy.
 
 **Graceful degradation.** Every CMS read swallows its errors and falls back to the wording already in the code. A database outage serves a slightly stale page rather than a 500 — a stale page still sells; an error page sells nothing.
+
+**Social proof is never fabricated.** `src/lib/google-reviews.ts` has no fallback data by design — if Google returns nothing, the section disappears. Inventing reviews breaches the Australian Consumer Law, and presenting invented text as a Google review misrepresents Google as well as the business. Pages with no genuine testimonials use the founder's verifiable credentials instead.
 
 **Claims discipline.** No unsourced statistic appears anywhere on the site. Widely repeated figures — "80% of jobs are never advertised", "recruiters spend 6 seconds on a resume" — were removed and replaced with defensible qualitative claims, and a startup check flags any that reappear. The site never promises a job, and says so explicitly on the pages where someone is about to pay.
 
@@ -168,10 +186,21 @@ off so schema changes are reviewable.
 **Neon.** The connection string is stripped of `channel_binding`, which
 node-postgres rejects. TLS still applies via `sslmode=require`.
 
-**Uploads.** Media is configured to write to `public/media`, which does not
-survive on a serverless host — the filesystem is read-only and rebuilt on every
-deploy. Images committed to the repo work fine; anything uploaded through the
-admin panel needs S3 or Vercel Blob before launch.
+**Uploads.** A serverless filesystem is read-only and rebuilt on every deploy,
+so anything uploaded through the admin panel would vanish the next time the
+site shipped. Vercel Blob is wired up for both media and customer files, and
+switches on only when `BLOB_READ_WRITE_TOKEN` is present — local development
+keeps writing to disk with no account or setup. Create the store from the
+Storage tab in Vercel and the variable is set automatically.
+
+Locally, customer files write to `private-uploads/student-files`: gitignored,
+and deliberately outside `public/`, since everything in `public/` is served
+statically with no access check.
+
+A blob URL is unguessable but publicly readable, so customer files are never
+linked to directly. `/api/portal/file/[id]` re-checks the session and the
+document's owner, then streams the bytes — the storage URL never reaches a
+browser, a history entry, or a referrer header.
 
 ## Status
 

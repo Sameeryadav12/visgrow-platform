@@ -1,24 +1,30 @@
 import type { CollectionConfig } from "payload";
+import { sendPortalWelcome } from "@/lib/email";
 
 /**
- * Someone enrolled in the Accelerator.
+ * A paying customer, and their account for the portal.
  *
- * Mustafa creates these by hand after payment clears — there is no
- * self-signup, because access to a paid program should never be one form
- * submission away from being free.
+ * Originally this was only Accelerator students. It now covers everyone who
+ * has bought anything, because they all need the same thing: one place to
+ * sign in and find their program, their files, and their next session.
+ * Which of those they see is decided by the programs listed against them.
  *
- * Days unlock on a schedule from their start date, so each intake runs on
- * its own clock without him having to do anything daily.
+ * Records are created by hand after payment clears — there is no self-signup,
+ * because access to a paid program should never be one form submission away
+ * from being free.
+ *
+ * Accelerator days unlock on a schedule from the start date, so each intake
+ * runs on its own clock without anyone having to do something daily.
  */
 export const Students: CollectionConfig = {
   slug: "students",
-  labels: { singular: "Student", plural: "Students" },
+  labels: { singular: "Customer", plural: "Customers" },
   admin: {
     group: "Program",
     useAsTitle: "name",
-    defaultColumns: ["name", "email", "startDate", "status", "lastSeen"],
+    defaultColumns: ["name", "email", "programs", "status", "lastSeen"],
     description:
-      "People enrolled in the 14-Day Accelerator. Add someone here once they've paid and they can sign in straight away.",
+      "Everyone who has bought something. Add someone here once they've paid and they can sign in to their portal straight away.",
     listSearchableFields: ["name", "email"],
   },
   defaultSort: "-createdAt",
@@ -30,6 +36,17 @@ export const Students: CollectionConfig = {
   },
   hooks: {
     beforeChange: [
+      ({ data }) => {
+        // Sign-in lowercases whatever the customer types before looking them
+        // up. If Mustafa saved "Testing@Gmail.com", that lookup finds
+        // nothing and the customer can never get in — while the page tells
+        // them a link is on its way. Normalise here so the two always agree.
+        if (typeof data?.email === "string") {
+          data.email = data.email.trim().toLowerCase();
+        }
+        return data;
+      },
+
       ({ data, originalDoc }) => {
         if (!originalDoc) return data;
         const was = originalDoc.status;
@@ -60,6 +77,22 @@ export const Students: CollectionConfig = {
         return data;
       },
     ],
+
+    afterChange: [
+      async ({ doc, operation, req }) => {
+        // Only on create, so it can never fire twice for the same person.
+        if (operation !== "create") return doc;
+        if (doc.sendWelcome === false) return doc;
+        if (doc.status === "revoked") return doc;
+
+        // Awaited so a failure is visible in the log, but sendPortalWelcome
+        // swallows its own errors — a bounced welcome must never stop the
+        // customer record being saved.
+        await sendPortalWelcome({ name: doc.name, email: doc.email });
+        req.payload.logger.info(`[visgrow] Portal welcome sent to ${doc.email}`);
+        return doc;
+      },
+    ],
   },
 
   fields: [
@@ -79,19 +112,35 @@ export const Students: CollectionConfig = {
       ],
     },
     {
+      name: "programs",
+      label: "What they've bought",
+      type: "relationship",
+      relationTo: "programs",
+      hasMany: true,
+      admin: {
+        description:
+          "Decides what they see in their portal. Someone with the Accelerator gets the daily lessons; everyone gets their files and sessions.",
+      },
+    },
+    {
+      name: "phone",
+      label: "Their phone",
+      type: "text",
+      admin: { description: "Optional. Only for you — never shown publicly." },
+    },
+    {
       type: "row",
       fields: [
         {
           name: "startDate",
           type: "date",
-          label: "Start date",
-          required: true,
+          label: "Accelerator start date",
           defaultValue: () => new Date().toISOString(),
           admin: {
             width: "50%",
             date: { pickerAppearance: "dayOnly", displayFormat: "d MMM yyyy" },
             description:
-              "Day 1 opens on this date, Day 2 the next day, and so on. Change it to move their whole schedule.",
+              "Day 1 opens on this date, Day 2 the next day, and so on. Leave blank if they haven't bought the Accelerator.",
           },
         },
         {
@@ -135,6 +184,17 @@ export const Students: CollectionConfig = {
       admin: {
         readOnly: true,
         description: "Updated automatically as they work through the program.",
+      },
+    },
+    {
+      name: "sendWelcome",
+      type: "checkbox",
+      label: "Email them their portal link",
+      defaultValue: true,
+      admin: {
+        position: "sidebar",
+        description:
+          "Sends once, when you first save this person. Untick if you'd rather tell them yourself.",
       },
     },
     {

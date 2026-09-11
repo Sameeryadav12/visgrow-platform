@@ -64,6 +64,21 @@ const CORRECTIONS: Correction[] = [
     replace: "reach the roles that never get advertised",
   },
   {
+    why: "Resources filters moved from a hash to a query parameter. A hash-only change on the page you are already on does not always trigger a navigation, so the three dropdown links appeared dead.",
+    find: "/resources#students",
+    replace: "/resources?for=students",
+  },
+  {
+    why: "Same, for the employer link.",
+    find: "/resources#employers",
+    replace: "/resources?for=employers",
+  },
+  {
+    why: "Same, for the education partner link.",
+    find: "/resources#education-partners",
+    replace: "/resources?for=education-partners",
+  },
+  {
     why: "The same claim inverted as 20%.",
     find: "competing in the same visible 20% of the market",
     replace: "competing for the same advertised roles",
@@ -177,11 +192,49 @@ async function applyConfirmedDetails(payload: Payload) {
   }
 }
 
+/**
+ * Makes sure the free scorecard is linked from the main menu.
+ *
+ * The navigation is stored in the database and the saved copy wins over the
+ * code fallback, so adding the link to nav-data.ts alone would do nothing on
+ * any site that has already been seeded — including the live one.
+ *
+ * Only ever adds, and only if it isn't there. If Mustafa later removes or
+ * renames it himself, this leaves his version alone.
+ */
+async function ensureScorecardLink(payload: Payload) {
+  try {
+    const nav = await payload.findGlobal({ slug: "navigation", depth: 0 });
+    const items = nav?.items;
+    if (!Array.isArray(items)) return;
+
+    const alreadyThere = JSON.stringify(items).includes("/scorecard");
+    if (alreadyThere) return;
+
+    const students = items.find((i) =>
+      /students/i.test(String(i?.label ?? "")),
+    );
+    if (!students || !Array.isArray(students.children)) return;
+
+    students.children.unshift({
+      label: "Free Job-Readiness Scorecard",
+      href: "/scorecard",
+    });
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    await payload.updateGlobal({ slug: "navigation", data: { items } as any });
+    payload.logger.info("[visgrow] Added the scorecard link to the menu.");
+  } catch (err) {
+    payload.logger.error({ err }, "[visgrow] Could not add the scorecard link");
+  }
+}
+
 export async function runCorrections(payload: Payload) {
   let total = 0;
 
   try {
     await applyConfirmedDetails(payload);
+    await ensureScorecardLink(payload);
 
     // Home page copy
     const home = await payload.findGlobal({ slug: "home-page", depth: 0 });
@@ -194,6 +247,22 @@ export async function runCorrections(payload: Payload) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       await payload.updateGlobal({ slug: "home-page", data: fixedHome as any });
       total += counter.count;
+    }
+
+    // Navigation and footer. These hold the dropdown hrefs, and the saved
+    // values win over the code fallbacks — so a link fixed only in
+    // nav-data.ts would still be broken on the live site.
+    for (const slug of ["navigation", "footer"] as const) {
+      const g = await payload.findGlobal({ slug, depth: 0 });
+      const c = { count: 0, flagged: [] as string[] };
+      const fixed = fix(g, c) as Record<string, unknown>;
+      if (c.count === 0) continue;
+      delete fixed.id;
+      delete fixed.updatedAt;
+      delete fixed.createdAt;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      await payload.updateGlobal({ slug, data: fixed as any });
+      total += c.count;
     }
 
     // Every other page's copy

@@ -51,7 +51,10 @@ export default function Header({
 
   // Close the drawer when the viewport grows to desktop.
   useEffect(() => {
-    const mq = window.matchMedia("(min-width: 1024px)");
+    // Must match the `xl:` breakpoint the desktop nav uses, or the drawer
+    // closes at a width where the desktop bar hasn't appeared yet and the
+    // page is left with no navigation at all.
+    const mq = window.matchMedia("(min-width: 1280px)");
     const onChange = () => mq.matches && setMobileOpen(false);
     mq.addEventListener("change", onChange);
     return () => mq.removeEventListener("change", onChange);
@@ -73,7 +76,7 @@ export default function Header({
       }`}
     >
       <div className="h-[3px] bg-brand-gradient" />
-      <div className="mx-auto flex max-w-[1280px] items-center justify-between gap-6 px-6 py-3 lg:px-10">
+      <div className="mx-auto flex max-w-[1400px] items-center justify-between gap-4 px-6 py-3 lg:px-8">
         <Link href="/" className="flex items-center gap-2 shrink-0">
           <Image
             src="/logo/PNG/visgrow-logo-primary.png"
@@ -85,7 +88,7 @@ export default function Header({
           />
         </Link>
 
-        <nav className="hidden lg:flex items-center gap-1">
+        <nav className="hidden xl:flex items-center gap-0.5">
           {menu.map((item) => (
             <div
               key={item.label}
@@ -95,7 +98,7 @@ export default function Header({
             >
               <Link
                 href={item.href}
-                className="flex items-center gap-1 px-4 py-2 text-[14.5px] font-semibold text-[var(--color-ink)] transition-colors hover:text-brand-purple rounded-full"
+                className="flex items-center gap-1 whitespace-nowrap px-3 py-2 text-[14.5px] font-semibold text-[var(--color-ink)] transition-colors hover:text-brand-purple rounded-full"
               >
                 {item.label}
                 {item.children && (
@@ -135,23 +138,33 @@ export default function Header({
           ))}
         </nav>
 
-        <div className="hidden lg:flex items-center gap-3">
+        <div className="hidden xl:flex items-center gap-3">
+          {/* Existing customers only. Deliberately a quiet text link, not a
+              button: the header's job is to convert strangers, and a prominent
+              "Sign in" makes a first-time visitor feel they're in the wrong
+              place. People who already paid will look for it, and find it. */}
+          <Link
+            href="/sign-in"
+            className="whitespace-nowrap text-[13.5px] font-semibold text-brand-sub transition-colors hover:text-brand-purple"
+          >
+            Sign in
+          </Link>
           <Link
             href="/contact"
-            className="rounded-full px-5 py-2.5 text-[14px] font-bold text-[var(--color-ink)] border-2 border-[var(--color-line)] hover:border-brand-purple transition-colors"
+            className="whitespace-nowrap rounded-full px-5 py-2.5 text-[14px] font-bold text-[var(--color-ink)] border-2 border-[var(--color-line)] hover:border-brand-purple transition-colors"
           >
             Contact
           </Link>
           <Link
             href={ctaHref}
-            className="rounded-full bg-brand-gradient px-6 py-2.5 text-[14px] font-bold text-white shadow-[0_8px_20px_rgba(105,24,220,0.28)] transition-transform hover:-translate-y-0.5"
+            className="whitespace-nowrap rounded-full bg-brand-gradient px-6 py-2.5 text-[14px] font-bold text-white shadow-[0_8px_20px_rgba(105,24,220,0.28)] transition-transform hover:-translate-y-0.5"
           >
             {ctaLabel}
           </Link>
         </div>
 
         <button
-          className="lg:hidden -mr-2 flex h-11 w-11 flex-col items-center justify-center gap-1.5"
+          className="xl:hidden -mr-2 flex h-11 w-11 flex-col items-center justify-center gap-1.5"
           onClick={() => setMobileOpen((v) => !v)}
           aria-label="Toggle menu"
           aria-expanded={mobileOpen}
@@ -163,7 +176,7 @@ export default function Header({
       </div>
 
       {mobileOpen && (
-        <div className="lg:hidden border-t border-[var(--color-line)] bg-white px-6 py-4 max-h-[80vh] overflow-y-auto">
+        <div className="xl:hidden border-t border-[var(--color-line)] bg-white px-6 py-4 max-h-[80vh] overflow-y-auto">
           {menu.map((item) => (
             <div key={item.label} className="py-2">
               <Link
@@ -195,6 +208,13 @@ export default function Header({
             onClick={() => setMobileOpen(false)}
           >
             Contact
+          </Link>
+          <Link
+            href="/sign-in"
+            className="block py-2.5 text-[15.5px] font-bold text-[var(--color-ink)]"
+            onClick={() => setMobileOpen(false)}
+          >
+            Sign in
           </Link>
 
           <Link

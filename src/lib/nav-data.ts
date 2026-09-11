@@ -14,6 +14,7 @@ export const mainNav: NavItem[] = [
     label: "Students & Graduates",
     href: "/",
     children: [
+      { label: "Free Job-Readiness Scorecard", href: "/scorecard" },
       { label: "Overview", href: "/#overview" },
       { label: "Career Strategy & Gap Analysis", href: "/students-graduates/career-strategy-gap-analysis" },
       { label: "Career Coaching", href: "/students-graduates/career-coaching" },
@@ -61,9 +62,9 @@ export const mainNav: NavItem[] = [
     label: "Resources",
     href: "/resources",
     children: [
-      { label: "Student & Graduate Resources", href: "/resources#students" },
-      { label: "Employer Resources", href: "/resources#employers" },
-      { label: "Education Partner Resources", href: "/resources#education-partners" },
+      { label: "Student & Graduate Resources", href: "/resources?for=students" },
+      { label: "Employer Resources", href: "/resources?for=employers" },
+      { label: "Education Partner Resources", href: "/resources?for=education-partners" },
     ],
   },
   { label: "About", href: "/about" },

@@ -125,11 +125,19 @@ export default async function Footer() {
             {legalLine}
           </p>
           <div className="-my-2 flex gap-5 text-[13px] text-brand-sub">
+            <Link href="/scorecard" className="block py-2 transition-colors hover:text-brand-purple">
+              Free Scorecard
+            </Link>
             <Link href="/privacy-policy" className="block py-2 transition-colors hover:text-brand-purple">
               Privacy Policy
             </Link>
             <Link href="/terms-of-use" className="block py-2 transition-colors hover:text-brand-purple">
               Terms of Use
+            </Link>
+            {/* Second way in. Someone hunting for their login checks the
+                footer as often as the header. */}
+            <Link href="/sign-in" className="block py-2 transition-colors hover:text-brand-purple">
+              Customer sign in
             </Link>
           </div>
         </div>

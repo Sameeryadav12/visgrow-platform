@@ -3,6 +3,7 @@ import { getPayload } from "payload";
 import config from "@payload-config";
 import type Stripe from "stripe";
 import { stripe, formatAud } from "@/lib/stripe";
+import type { Student } from "@/payload-types";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -103,32 +104,71 @@ export async function POST(request: Request) {
                 limit: 1,
                 depth: 0,
               })
-            : Promise.resolve({ docs: [] as { id: number | string }[] }),
+            // Typed as Student, not just an id — the branch below reads their
+            // existing programs and start date to merge a repeat purchase.
+            : Promise.resolve({ docs: [] as Student[] }),
         ]);
 
         const program = programs.docs[0];
         const enquiry = enquiries.docs[0];
         let studentId: number | undefined = asId(students.docs[0]?.id);
 
-        // Buying the Accelerator grants program access immediately. Making
-        // someone wait for a human to enrol them after they've paid is a
-        // terrible first impression.
+        // Paying IS signing up. Every purchase provisions a portal account
+        // and records which program was bought — the portal then shows that
+        // program and nothing else. Making someone wait for a human to enrol
+        // them after they've handed over money is a terrible first
+        // impression, and it puts a manual step in front of every sale.
         const isAccelerator =
           slug === "14-day-accelerator" || /accelerator/i.test(programTitle);
 
-        if (isAccelerator && email && !studentId) {
-          const created = await payload.create({
-            collection: "students",
-            data: {
-              name,
-              email,
-              startDate: new Date().toISOString(),
-              status: "active",
-              enquiry: asId(enquiry?.id),
-              notes: "Enrolled automatically after paying online.",
-            },
-          });
-          studentId = asId(created.id);
+        if (email) {
+          const existing = students.docs[0];
+
+          if (!existing) {
+            const created = await payload.create({
+              collection: "students",
+              data: {
+                name,
+                email,
+                // Only the Accelerator runs on a daily schedule. Setting a
+                // start date for anyone else would start a clock that has
+                // nothing to count.
+                startDate: isAccelerator ? new Date().toISOString() : null,
+                status: "active",
+                programs: program?.id ? [asId(program.id)!] : [],
+                enquiry: asId(enquiry?.id),
+                notes: "Signed up automatically after paying online.",
+              },
+            });
+            studentId = asId(created.id);
+          } else {
+            // A returning customer buying a second thing. Add the new program
+            // to what they already have rather than replacing it, and never
+            // touch a start date they're already partway through.
+            const owned = (existing.programs ?? []).map((p) =>
+              typeof p === "object" ? p.id : p,
+            );
+            const newId = asId(program?.id);
+            const patch: Record<string, unknown> = {};
+
+            if (newId && !owned.includes(newId)) {
+              patch.programs = [...owned, newId];
+            }
+            if (isAccelerator && !existing.startDate) {
+              patch.startDate = new Date().toISOString();
+            }
+            // Someone who paid again has clearly not been revoked.
+            if (existing.status === "revoked") patch.status = "active";
+
+            if (Object.keys(patch).length) {
+              await payload.update({
+                collection: "students",
+                id: existing.id,
+                data: patch,
+              });
+            }
+            studentId = asId(existing.id);
+          }
         }
 
         await payload.create({

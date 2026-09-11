@@ -52,3 +52,6 @@ next-env.d.ts
 /test-results
 /playwright-report
 /.playwright
+
+# Customer files (resumes, feedback). Private — never commit these.
+/private-uploads

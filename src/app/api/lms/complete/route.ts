@@ -1,7 +1,12 @@
 import { NextResponse } from "next/server";
 import { getPayload } from "payload";
 import config from "@payload-config";
-import { getCurrentStudent, unlockedThrough } from "@/lib/lms-auth";
+import {
+  getCurrentStudent,
+  unlockedThrough,
+  hasAcceleratorAccess,
+  getStudentProgramSlugs,
+} from "@/lib/lms-auth";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -11,6 +16,13 @@ export async function POST(request: Request) {
   const student = await getCurrentStudent();
   if (!student) {
     return NextResponse.json({ error: "Please sign in again." }, { status: 401 });
+  }
+
+  // Same check the pages do. An endpoint that trusts the UI to have
+  // enforced access is an endpoint with no access control.
+  const slugs = await getStudentProgramSlugs(student);
+  if (!hasAcceleratorAccess(student, slugs)) {
+    return NextResponse.json({ error: "Not your program." }, { status: 403 });
   }
 
   let day = 0;
