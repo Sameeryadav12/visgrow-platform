@@ -188,15 +188,22 @@ export default buildConfig({
 
   db: postgresAdapter({
     pool: buildPool(),
-    // Payload only creates tables automatically when NODE_ENV isn't
-    // "production". On a hosted deployment it is, so the schema was never
-    // built and every admin request failed while the public pages quietly
-    // fell back to their hard-coded copy.
-    //
-    // Push is the right call while this is a single environment with no
-    // migration history. Before the real launch, generate migrations and set
-    // this back to false so schema changes are reviewable and reversible.
-    push: true,
+
+    /**
+     * Schema push — on locally, off on Vercel.
+     *
+     * Push compares the config to the live database and creates or alters
+     * tables to match. That comparison runs inside whatever request happens
+     * to trigger the first connection. On a long-running local server that's
+     * fine. On a serverless function it is not: adding two collections made
+     * every cold start try to alter the schema mid-request, and the whole
+     * site — public pages included — went blank while requests hung.
+     *
+     * So schema changes are applied deliberately, from a machine with time:
+     * point .env.local at the hosted database and run `npm run dev` once.
+     * The hosted app then only ever reads and writes rows, never DDL.
+     */
+    push: !process.env.VERCEL,
   }),
 
   sharp,
