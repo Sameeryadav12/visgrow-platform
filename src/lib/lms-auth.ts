@@ -1,5 +1,6 @@
 import crypto from "crypto";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 import { getPayload } from "payload";
 import config from "@payload-config";
 import type { Student } from "@/payload-types";
@@ -93,6 +94,22 @@ export async function getCurrentStudent(): Promise<Student | null> {
   } catch {
     return null;
   }
+}
+
+/**
+ * The signed-in student, or a redirect to sign-in.
+ *
+ * A layout guard is not enough on its own. Next.js renders the layout and the
+ * page in parallel, so `redirect()` in a layout does not stop the page
+ * function from running — the page still executes against a null student and
+ * throws before the redirect lands. Every page that needs a student must
+ * therefore check for itself, and this makes that a one-liner rather than
+ * something easy to forget.
+ */
+export async function requireStudent(): Promise<Student> {
+  const student = await getCurrentStudent();
+  if (!student) redirect("/sign-in?problem=signedout");
+  return student;
 }
 
 /** Program slugs that unlock the day-by-day lesson area. */

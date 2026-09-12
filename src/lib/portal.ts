@@ -31,6 +31,11 @@ export async function getPortalData(student: Student): Promise<PortalData> {
     hasAccelerator: false,
   };
 
+  // Belt and braces. The pages guard with requireStudent(), but this is
+  // exported and a future caller shouldn't be able to bring a page down by
+  // passing nothing.
+  if (!student?.id) return empty;
+
   try {
     const payload = await getPayload({ config });
 

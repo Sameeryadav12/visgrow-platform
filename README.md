@@ -176,12 +176,18 @@ DATABASE_URI=<hosted connection string> npm run dev
 Watch for `[visgrow] Setup complete.` in the output, then stop it. The hosted
 app reads and writes normally from that point on.
 
-**Schema.** `push: true` is set on the Postgres adapter. Payload only creates
-tables automatically when `NODE_ENV` isn't `production`, so without it a hosted
-deployment starts against an empty database — the admin panel 500s while the
-public pages quietly fall back to their hard-coded copy, which makes the
-failure easy to miss. Before the real launch, generate migrations and turn push
-off so schema changes are reviewable.
+**Schema.** Push is on locally and off on Vercel (`push: !process.env.VERCEL`).
+Push compares the config to the live database and runs the DDL to reconcile
+them, inside whichever request opens the first connection. On a serverless
+host that means adding a collection makes every cold start attempt a schema
+change mid-request — which took the entire site blank, public pages included,
+until it was turned off.
+
+So schema changes are applied on purpose, from a machine with time: point
+`.env.local` at the hosted database, run `npm run dev` once, wait for
+`[visgrow] Setup complete.`, stop it, then deploy. **Do this before deploying
+any change that adds or alters a collection.** Before the real launch,
+generate proper migrations so this is reviewable and reversible.
 
 **Neon.** The connection string is stripped of `channel_binding`, which
 node-postgres rejects. TLS still applies via `sslmode=require`.

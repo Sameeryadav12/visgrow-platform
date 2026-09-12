@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { getPayload } from "payload";
 import config from "@payload-config";
-import { getCurrentStudent, unlockedThrough } from "@/lib/lms-auth";
+import { requireStudent, unlockedThrough } from "@/lib/lms-auth";
 import { getPortalData, formatWhen } from "@/lib/portal";
 
 export const metadata: Metadata = {
@@ -22,7 +22,7 @@ export const revalidate = 0;
  * supporting detail underneath.
  */
 export default async function PortalPage() {
-  const student = (await getCurrentStudent())!;
+  const student = await requireStudent();
   const data = await getPortalData(student);
 
   const firstName = student.name.split(" ")[0];

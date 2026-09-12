@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { getCurrentStudent } from "@/lib/lms-auth";
+import { requireStudent } from "@/lib/lms-auth";
 import { getPortalData, formatDay } from "@/lib/portal";
 
 export const metadata: Metadata = {
@@ -18,7 +18,7 @@ const STATUS: Record<string, string> = {
 };
 
 export default async function PortalAccountPage() {
-  const student = (await getCurrentStudent())!;
+  const student = await requireStudent();
   const { programs } = await getPortalData(student);
 
   return (

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { getCurrentStudent } from "@/lib/lms-auth";
+import { requireStudent } from "@/lib/lms-auth";
 import { getPortalData, formatDay } from "@/lib/portal";
 
 export const metadata: Metadata = {
@@ -24,7 +24,7 @@ const prettySize = (bytes?: number | null) =>
     : `${Math.max(1, Math.round(bytes / 1024))} KB`;
 
 export default async function PortalFilesPage() {
-  const student = (await getCurrentStudent())!;
+  const student = await requireStudent();
   const { documents } = await getPortalData(student);
 
   return (

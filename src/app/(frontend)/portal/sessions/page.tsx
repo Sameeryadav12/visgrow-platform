@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { getCurrentStudent } from "@/lib/lms-auth";
+import { requireStudent } from "@/lib/lms-auth";
 import { getPortalData, formatWhen } from "@/lib/portal";
 import type { CoachingSession } from "@/payload-types";
 
@@ -12,7 +12,7 @@ export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 export default async function PortalSessionsPage() {
-  const student = (await getCurrentStudent())!;
+  const student = await requireStudent();
   const { upcoming, past } = await getPortalData(student);
 
   return (
