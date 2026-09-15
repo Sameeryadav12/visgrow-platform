@@ -4,7 +4,7 @@ export const CompanyLogos: CollectionConfig = {
   slug: "company-logos",
   labels: { singular: "Company logo", plural: "Company logos" },
   admin: {
-    group: "Content",
+    group: "4 · Pictures",
     useAsTitle: "name",
     defaultColumns: ["name", "active", "order"],
     description:

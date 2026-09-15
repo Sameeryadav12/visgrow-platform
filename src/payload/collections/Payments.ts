@@ -12,7 +12,7 @@ export const Payments: CollectionConfig = {
   slug: "payments",
   labels: { singular: "Payment", plural: "Payments" },
   admin: {
-    group: "Leads",
+    group: "1 · People",
     useAsTitle: "customerName",
     defaultColumns: ["customerName", "programName", "amountFormatted", "status", "paidAt"],
     listSearchableFields: ["customerName", "customerEmail", "stripeSessionId"],

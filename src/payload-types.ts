@@ -67,18 +67,18 @@ export interface Config {
   };
   blocks: {};
   collections: {
-    'page-copy': PageCopy;
-    programs: Program;
-    testimonials: Testimonial;
-    faqs: Faq;
-    'company-logos': CompanyLogo;
-    media: Media;
-    lessons: Lesson;
+    enquiries: Enquiry;
     students: Student;
+    payments: Payment;
     'coaching-sessions': CoachingSession;
     'student-documents': StudentDocument;
-    enquiries: Enquiry;
-    payments: Payment;
+    lessons: Lesson;
+    'page-copy': PageCopy;
+    programs: Program;
+    faqs: Faq;
+    testimonials: Testimonial;
+    media: Media;
+    'company-logos': CompanyLogo;
     users: User;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
@@ -87,18 +87,18 @@ export interface Config {
   };
   collectionsJoins: {};
   collectionsSelect: {
-    'page-copy': PageCopySelect<false> | PageCopySelect<true>;
-    programs: ProgramsSelect<false> | ProgramsSelect<true>;
-    testimonials: TestimonialsSelect<false> | TestimonialsSelect<true>;
-    faqs: FaqsSelect<false> | FaqsSelect<true>;
-    'company-logos': CompanyLogosSelect<false> | CompanyLogosSelect<true>;
-    media: MediaSelect<false> | MediaSelect<true>;
-    lessons: LessonsSelect<false> | LessonsSelect<true>;
+    enquiries: EnquiriesSelect<false> | EnquiriesSelect<true>;
     students: StudentsSelect<false> | StudentsSelect<true>;
+    payments: PaymentsSelect<false> | PaymentsSelect<true>;
     'coaching-sessions': CoachingSessionsSelect<false> | CoachingSessionsSelect<true>;
     'student-documents': StudentDocumentsSelect<false> | StudentDocumentsSelect<true>;
-    enquiries: EnquiriesSelect<false> | EnquiriesSelect<true>;
-    payments: PaymentsSelect<false> | PaymentsSelect<true>;
+    lessons: LessonsSelect<false> | LessonsSelect<true>;
+    'page-copy': PageCopySelect<false> | PageCopySelect<true>;
+    programs: ProgramsSelect<false> | ProgramsSelect<true>;
+    faqs: FaqsSelect<false> | FaqsSelect<true>;
+    testimonials: TestimonialsSelect<false> | TestimonialsSelect<true>;
+    media: MediaSelect<false> | MediaSelect<true>;
+    'company-logos': CompanyLogosSelect<false> | CompanyLogosSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
@@ -147,6 +147,434 @@ export interface UserAuthOperations {
   unlock: {
     email: string;
     password: string;
+  };
+}
+/**
+ * Everyone who has filled in a form on the website. Newest first. Use the filters to see just the ones you owe a call.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "enquiries".
+ */
+export interface Enquiry {
+  id: number;
+  name: string;
+  email: string;
+  phone?: string | null;
+  /**
+   * Only for employer and education enquiries.
+   */
+  organisation?: string | null;
+  audience?: ('student' | 'employer' | 'education') | null;
+  enquiryType?: string | null;
+  /**
+   * Set this once you know — it's what makes the pipeline total meaningful.
+   */
+  program?: (number | null) | Program;
+  /**
+   * Your estimate. Leave blank if it's too early to say.
+   */
+  value?: number | null;
+  /**
+   * In their own words, straight from the form.
+   */
+  message?: string | null;
+  /**
+   * Every call, email and meeting. Status changes are added here automatically.
+   */
+  activity?:
+    | {
+        date: string;
+        type?: ('call' | 'email' | 'meeting' | 'voicemail' | 'status' | 'other') | null;
+        note: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Changing this is logged in the contact history.
+   */
+  status: 'new' | 'contacted' | 'booked' | 'enrolled' | 'closed';
+  /**
+   * The most useful field here. Filter the list by this to see who you owe a call today.
+   */
+  followUpDate?: string | null;
+  priority?: ('hot' | 'warm' | 'cold') | null;
+  /**
+   * Which page the form was on.
+   */
+  source?: string | null;
+  /**
+   * If this is unticked, do not add them to any marketing list.
+   */
+  consent?: boolean | null;
+  /**
+   * Never shown on the website.
+   */
+  notes?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * The things people can buy. Pricing shown on the site comes from here — change it once and it updates everywhere.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "programs".
+ */
+export interface Program {
+  id: number;
+  title: string;
+  /**
+   * URL-safe id, e.g. career-strategy-gap-analysis
+   */
+  slug: string;
+  /**
+   * One line on the pricing card.
+   */
+  tagline?: string | null;
+  /**
+   * Who this is genuinely right for. Being honest here reduces refunds and bad reviews.
+   */
+  bestFor?: string | null;
+  /**
+   * Shown as-is, e.g. '$349' or 'From $1,200'.
+   */
+  price?: string | null;
+  /**
+   * Small print under the price, e.g. 'per person, inc GST'.
+   */
+  priceNote?: string | null;
+  /**
+   * E.g. '90 minutes' or '14 days'.
+   */
+  duration?: string | null;
+  /**
+   * Asterisked terms and conditions shown under the price. Required by the client.
+   */
+  terms?: string | null;
+  /**
+   * Bullet list on the pricing card.
+   */
+  includes?:
+    | {
+        item: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Describe the change, not the deliverable. 'You stop guessing what recruiters want' beats 'a 10-page report'.
+   */
+  outcomes?:
+    | {
+        item: string;
+        id?: string | null;
+      }[]
+    | null;
+  audience: 'student' | 'employer' | 'education';
+  /**
+   * The full page for this program, e.g. /students-graduates/career-coaching
+   */
+  pageUrl?: string | null;
+  /**
+   * Button text. Keep it casual — the client dislikes 'Enquire Now'.
+   */
+  ctaLabel?: string | null;
+  /**
+   * Highlight this card as the most popular option.
+   */
+  featured?: boolean | null;
+  /**
+   * Lower numbers appear first.
+   */
+  order?: number | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Everyone who has bought something. Add someone here once they've paid and they can sign in to their portal straight away.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "students".
+ */
+export interface Student {
+  id: number;
+  name: string;
+  /**
+   * This is how they sign in. Must be exact.
+   */
+  email: string;
+  /**
+   * Decides what they see in their portal. Someone with the Accelerator gets the daily lessons; everyone gets their files and sessions.
+   */
+  programs?: (number | Program)[] | null;
+  /**
+   * Optional. Only for you — never shown publicly.
+   */
+  phone?: string | null;
+  /**
+   * Day 1 opens on this date, Day 2 the next day, and so on. Leave blank if they haven't bought the Accelerator.
+   */
+  startDate?: string | null;
+  status: 'active' | 'paused' | 'finished' | 'revoked';
+  /**
+   * Overrides the daily schedule. Useful for someone catching up, or for previewing the program yourself.
+   */
+  unlockEverything?: boolean | null;
+  /**
+   * Optional. Links them back to their original enquiry.
+   */
+  enquiry?: (number | null) | Enquiry;
+  /**
+   * Updated automatically as they work through the program.
+   */
+  completedDays?: number[] | null;
+  /**
+   * Sends once, when you first save this person. Untick if you'd rather tell them yourself.
+   */
+  sendWelcome?: boolean | null;
+  /**
+   * Never shown to the student.
+   */
+  notes?: string | null;
+  /**
+   * If someone hasn't appeared for a few days, that's your cue to check in.
+   */
+  lastSeen?: string | null;
+  pausedAt?: string | null;
+  /**
+   * Automatic check-in emails go out at most once a week, and only if they've gone quiet.
+   */
+  lastNudgedAt?: string | null;
+  loginToken?: string | null;
+  loginTokenExpires?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Every payment taken through the website. Written automatically by Stripe — these can't be edited, so they stay trustworthy.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "payments".
+ */
+export interface Payment {
+  id: number;
+  customerName?: string | null;
+  customerEmail?: string | null;
+  programName?: string | null;
+  /**
+   * As charged, including GST.
+   */
+  amountFormatted?: string | null;
+  status?: ('paid' | 'refunded' | 'partially_refunded' | 'failed' | 'disputed') | null;
+  paidAt?: string | null;
+  program?: (number | null) | Program;
+  /**
+   * The lead this payment came from, where we could match it.
+   */
+  enquiry?: (number | null) | Enquiry;
+  /**
+   * Created automatically for Accelerator purchases.
+   */
+  student?: (number | null) | Student;
+  amountCents?: number | null;
+  currency?: string | null;
+  /**
+   * Search this in your Stripe dashboard to see the full record.
+   */
+  stripeSessionId?: string | null;
+  stripePaymentIntentId?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * One-to-one sessions you've agreed with someone. Adding one here puts it in their portal with the link and the prep.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "coaching-sessions".
+ */
+export interface CoachingSession {
+  id: number;
+  student: number | Student;
+  /**
+   * E.g. 'Career strategy session' or 'Mock interview — round 2'.
+   */
+  title: string;
+  /**
+   * Adelaide time.
+   */
+  scheduledFor: string;
+  status: 'booked' | 'done' | 'cancelled';
+  /**
+   * Zoom, Teams, Meet — whatever you're using. Shown as a button in their portal. Leave blank for in-person.
+   */
+  meetingLink?: string | null;
+  /**
+   * Only if you're meeting in person.
+   */
+  location?: string | null;
+  /**
+   * Shown before the session. Someone who turns up prepared gets more out of it — and tells people so.
+   */
+  prep?: string | null;
+  /**
+   * Shown to them after the session is marked Done. Their record of what to do next.
+   */
+  outcome?: string | null;
+  /**
+   * Never shown to them.
+   */
+  privateNotes?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Files you're handing back to one person — a marked-up resume, a session summary, a worksheet. They appear in that person's portal straight away.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "student-documents".
+ */
+export interface StudentDocument {
+  id: number;
+  /**
+   * Only this person will ever see this file.
+   */
+  student: number | Student;
+  /**
+   * Write it the way they'd recognise it. 'Your resume — reviewed' beats 'resume_v3_final'.
+   */
+  title: string;
+  kind: 'feedback' | 'template' | 'summary' | 'invoice' | 'other';
+  /**
+   * Shown under the file in their portal. One sentence telling them what to do with it.
+   */
+  note?: string | null;
+  prefix?: string | null;
+  updatedAt: string;
+  createdAt: string;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
+}
+/**
+ * The 14 days of the Accelerator. Students see one new day each day after they start.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "lessons".
+ */
+export interface Lesson {
+  id: number;
+  /**
+   * 1 to 14. Controls the order and when it unlocks.
+   */
+  day: number;
+  /**
+   * E.g. 'Why your resume gets filtered out'.
+   */
+  title: string;
+  /**
+   * One or two sentences, shown on the program dashboard before they open it.
+   */
+  summary?: string | null;
+  /**
+   * Upload to YouTube as UNLISTED, then paste only the ID — the part after v=. Leave blank and the day shows 'video coming soon'.
+   */
+  youtubeId?: string | null;
+  /**
+   * Shown to students so they can plan their time.
+   */
+  durationMinutes?: number | null;
+  /**
+   * What they must actually do today. Be specific and finishable in about an hour.
+   */
+  task?: string | null;
+  /**
+   * Students tick these off as they go.
+   */
+  checklist?:
+    | {
+        text: string;
+        id?: string | null;
+      }[]
+    | null;
+  resources?:
+    | {
+        title: string;
+        /**
+         * Or upload a file below instead.
+         */
+        url?: string | null;
+        file?: (number | null) | Media;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Optional. A personal line at the top of the day — this is what makes it feel coached rather than automated.
+   */
+  coachNote?: string | null;
+  /**
+   * Until this is ticked, students never see this day — even if their date has passed.
+   */
+  published?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Photos, logos and images used anywhere on the site.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "media".
+ */
+export interface Media {
+  id: number;
+  /**
+   * Describe the image for screen readers and search engines. E.g. 'Mustafa Kadir speaking at a workshop'.
+   */
+  alt: string;
+  /**
+   * Optional photographer or source credit.
+   */
+  credit?: string | null;
+  prefix?: string | null;
+  updatedAt: string;
+  createdAt: string;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
+  sizes?: {
+    thumbnail?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+    card?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+    hero?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
   };
 }
 /**
@@ -412,77 +840,27 @@ export interface PageCopy {
   createdAt: string;
 }
 /**
- * The things people can buy. Pricing shown on the site comes from here — change it once and it updates everywhere.
+ * Answer the awkward questions honestly. Vague answers cost more sales than blunt ones.
  *
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "programs".
+ * via the `definition` "faqs".
  */
-export interface Program {
+export interface Faq {
   id: number;
-  title: string;
+  question: string;
   /**
-   * URL-safe id, e.g. career-strategy-gap-analysis
+   * Be direct. Never promise a guaranteed job — say what we actually do and what it depends on.
    */
-  slug: string;
-  /**
-   * One line on the pricing card.
-   */
-  tagline?: string | null;
-  /**
-   * Who this is genuinely right for. Being honest here reduces refunds and bad reviews.
-   */
-  bestFor?: string | null;
-  /**
-   * Shown as-is, e.g. '$349' or 'From $1,200'.
-   */
-  price?: string | null;
-  /**
-   * Small print under the price, e.g. 'per person, inc GST'.
-   */
-  priceNote?: string | null;
-  /**
-   * E.g. '90 minutes' or '14 days'.
-   */
-  duration?: string | null;
-  /**
-   * Asterisked terms and conditions shown under the price. Required by the client.
-   */
-  terms?: string | null;
-  /**
-   * Bullet list on the pricing card.
-   */
-  includes?:
-    | {
-        item: string;
-        id?: string | null;
-      }[]
-    | null;
-  /**
-   * Describe the change, not the deliverable. 'You stop guessing what recruiters want' beats 'a 10-page report'.
-   */
-  outcomes?:
-    | {
-        item: string;
-        id?: string | null;
-      }[]
-    | null;
-  audience: 'student' | 'employer' | 'education';
-  /**
-   * The full page for this program, e.g. /students-graduates/career-coaching
-   */
-  pageUrl?: string | null;
-  /**
-   * Button text. Keep it casual — the client dislikes 'Enquire Now'.
-   */
-  ctaLabel?: string | null;
-  /**
-   * Highlight this card as the most popular option.
-   */
-  featured?: boolean | null;
+  answer: string;
+  audience: 'student' | 'employer' | 'education' | 'all';
   /**
    * Lower numbers appear first.
    */
   order?: number | null;
+  /**
+   * Show this FAQ on these program pages. Leave blank for site-wide.
+   */
+  programs?: (number | Program)[] | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -524,85 +902,6 @@ export interface Testimonial {
   createdAt: string;
 }
 /**
- * Photos, logos and images used anywhere on the site.
- *
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "media".
- */
-export interface Media {
-  id: number;
-  /**
-   * Describe the image for screen readers and search engines. E.g. 'Mustafa Kadir speaking at a workshop'.
-   */
-  alt: string;
-  /**
-   * Optional photographer or source credit.
-   */
-  credit?: string | null;
-  updatedAt: string;
-  createdAt: string;
-  url?: string | null;
-  thumbnailURL?: string | null;
-  filename?: string | null;
-  mimeType?: string | null;
-  filesize?: number | null;
-  width?: number | null;
-  height?: number | null;
-  focalX?: number | null;
-  focalY?: number | null;
-  sizes?: {
-    thumbnail?: {
-      url?: string | null;
-      width?: number | null;
-      height?: number | null;
-      mimeType?: string | null;
-      filesize?: number | null;
-      filename?: string | null;
-    };
-    card?: {
-      url?: string | null;
-      width?: number | null;
-      height?: number | null;
-      mimeType?: string | null;
-      filesize?: number | null;
-      filename?: string | null;
-    };
-    hero?: {
-      url?: string | null;
-      width?: number | null;
-      height?: number | null;
-      mimeType?: string | null;
-      filesize?: number | null;
-      filename?: string | null;
-    };
-  };
-}
-/**
- * Answer the awkward questions honestly. Vague answers cost more sales than blunt ones.
- *
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "faqs".
- */
-export interface Faq {
-  id: number;
-  question: string;
-  /**
-   * Be direct. Never promise a guaranteed job — say what we actually do and what it depends on.
-   */
-  answer: string;
-  audience: 'student' | 'employer' | 'education' | 'all';
-  /**
-   * Lower numbers appear first.
-   */
-  order?: number | null;
-  /**
-   * Show this FAQ on these program pages. Leave blank for site-wide.
-   */
-  programs?: (number | Program)[] | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
  * Organisations shown in the scrolling logo strip. Only include ones you can evidence — a wrong claim here is a legal problem, not a design one.
  *
  * This interface was referenced by `Config`'s JSON-Schema
@@ -627,303 +926,6 @@ export interface CompanyLogo {
    * Lower numbers appear first.
    */
   order?: number | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * The 14 days of the Accelerator. Students see one new day each day after they start.
- *
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "lessons".
- */
-export interface Lesson {
-  id: number;
-  /**
-   * 1 to 14. Controls the order and when it unlocks.
-   */
-  day: number;
-  /**
-   * E.g. 'Why your resume gets filtered out'.
-   */
-  title: string;
-  /**
-   * One or two sentences, shown on the program dashboard before they open it.
-   */
-  summary?: string | null;
-  /**
-   * Upload to YouTube as UNLISTED, then paste only the ID — the part after v=. Leave blank and the day shows 'video coming soon'.
-   */
-  youtubeId?: string | null;
-  /**
-   * Shown to students so they can plan their time.
-   */
-  durationMinutes?: number | null;
-  /**
-   * What they must actually do today. Be specific and finishable in about an hour.
-   */
-  task?: string | null;
-  /**
-   * Students tick these off as they go.
-   */
-  checklist?:
-    | {
-        text: string;
-        id?: string | null;
-      }[]
-    | null;
-  resources?:
-    | {
-        title: string;
-        /**
-         * Or upload a file below instead.
-         */
-        url?: string | null;
-        file?: (number | null) | Media;
-        id?: string | null;
-      }[]
-    | null;
-  /**
-   * Optional. A personal line at the top of the day — this is what makes it feel coached rather than automated.
-   */
-  coachNote?: string | null;
-  /**
-   * Until this is ticked, students never see this day — even if their date has passed.
-   */
-  published?: boolean | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * Everyone who has bought something. Add someone here once they've paid and they can sign in to their portal straight away.
- *
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "students".
- */
-export interface Student {
-  id: number;
-  name: string;
-  /**
-   * This is how they sign in. Must be exact.
-   */
-  email: string;
-  /**
-   * Decides what they see in their portal. Someone with the Accelerator gets the daily lessons; everyone gets their files and sessions.
-   */
-  programs?: (number | Program)[] | null;
-  /**
-   * Optional. Only for you — never shown publicly.
-   */
-  phone?: string | null;
-  /**
-   * Day 1 opens on this date, Day 2 the next day, and so on. Leave blank if they haven't bought the Accelerator.
-   */
-  startDate?: string | null;
-  status: 'active' | 'paused' | 'finished' | 'revoked';
-  /**
-   * Overrides the daily schedule. Useful for someone catching up, or for previewing the program yourself.
-   */
-  unlockEverything?: boolean | null;
-  /**
-   * Optional. Links them back to their original enquiry.
-   */
-  enquiry?: (number | null) | Enquiry;
-  /**
-   * Updated automatically as they work through the program.
-   */
-  completedDays?: number[] | null;
-  /**
-   * Sends once, when you first save this person. Untick if you'd rather tell them yourself.
-   */
-  sendWelcome?: boolean | null;
-  /**
-   * Never shown to the student.
-   */
-  notes?: string | null;
-  /**
-   * If someone hasn't appeared for a few days, that's your cue to check in.
-   */
-  lastSeen?: string | null;
-  pausedAt?: string | null;
-  /**
-   * Automatic check-in emails go out at most once a week, and only if they've gone quiet.
-   */
-  lastNudgedAt?: string | null;
-  loginToken?: string | null;
-  loginTokenExpires?: string | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * Everyone who has filled in a form on the website. Newest first. Use the filters to see just the ones you owe a call.
- *
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "enquiries".
- */
-export interface Enquiry {
-  id: number;
-  name: string;
-  email: string;
-  phone?: string | null;
-  /**
-   * Only for employer and education enquiries.
-   */
-  organisation?: string | null;
-  audience?: ('student' | 'employer' | 'education') | null;
-  enquiryType?: string | null;
-  /**
-   * Set this once you know — it's what makes the pipeline total meaningful.
-   */
-  program?: (number | null) | Program;
-  /**
-   * Your estimate. Leave blank if it's too early to say.
-   */
-  value?: number | null;
-  /**
-   * In their own words, straight from the form.
-   */
-  message?: string | null;
-  /**
-   * Every call, email and meeting. Status changes are added here automatically.
-   */
-  activity?:
-    | {
-        date: string;
-        type?: ('call' | 'email' | 'meeting' | 'voicemail' | 'status' | 'other') | null;
-        note: string;
-        id?: string | null;
-      }[]
-    | null;
-  /**
-   * Changing this is logged in the contact history.
-   */
-  status: 'new' | 'contacted' | 'booked' | 'enrolled' | 'closed';
-  /**
-   * The most useful field here. Filter the list by this to see who you owe a call today.
-   */
-  followUpDate?: string | null;
-  priority?: ('hot' | 'warm' | 'cold') | null;
-  /**
-   * Which page the form was on.
-   */
-  source?: string | null;
-  /**
-   * If this is unticked, do not add them to any marketing list.
-   */
-  consent?: boolean | null;
-  /**
-   * Never shown on the website.
-   */
-  notes?: string | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * One-to-one sessions you've agreed with someone. Adding one here puts it in their portal with the link and the prep.
- *
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "coaching-sessions".
- */
-export interface CoachingSession {
-  id: number;
-  student: number | Student;
-  /**
-   * E.g. 'Career strategy session' or 'Mock interview — round 2'.
-   */
-  title: string;
-  /**
-   * Adelaide time.
-   */
-  scheduledFor: string;
-  status: 'booked' | 'done' | 'cancelled';
-  /**
-   * Zoom, Teams, Meet — whatever you're using. Shown as a button in their portal. Leave blank for in-person.
-   */
-  meetingLink?: string | null;
-  /**
-   * Only if you're meeting in person.
-   */
-  location?: string | null;
-  /**
-   * Shown before the session. Someone who turns up prepared gets more out of it — and tells people so.
-   */
-  prep?: string | null;
-  /**
-   * Shown to them after the session is marked Done. Their record of what to do next.
-   */
-  outcome?: string | null;
-  /**
-   * Never shown to them.
-   */
-  privateNotes?: string | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * Files you're handing back to one person — a marked-up resume, a session summary, a worksheet. They appear in that person's portal straight away.
- *
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "student-documents".
- */
-export interface StudentDocument {
-  id: number;
-  /**
-   * Only this person will ever see this file.
-   */
-  student: number | Student;
-  /**
-   * Write it the way they'd recognise it. 'Your resume — reviewed' beats 'resume_v3_final'.
-   */
-  title: string;
-  kind: 'feedback' | 'template' | 'summary' | 'invoice' | 'other';
-  /**
-   * Shown under the file in their portal. One sentence telling them what to do with it.
-   */
-  note?: string | null;
-  updatedAt: string;
-  createdAt: string;
-  url?: string | null;
-  thumbnailURL?: string | null;
-  filename?: string | null;
-  mimeType?: string | null;
-  filesize?: number | null;
-  width?: number | null;
-  height?: number | null;
-  focalX?: number | null;
-  focalY?: number | null;
-}
-/**
- * Every payment taken through the website. Written automatically by Stripe — these can't be edited, so they stay trustworthy.
- *
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "payments".
- */
-export interface Payment {
-  id: number;
-  customerName?: string | null;
-  customerEmail?: string | null;
-  programName?: string | null;
-  /**
-   * As charged, including GST.
-   */
-  amountFormatted?: string | null;
-  status?: ('paid' | 'refunded' | 'partially_refunded' | 'failed' | 'disputed') | null;
-  paidAt?: string | null;
-  program?: (number | null) | Program;
-  /**
-   * The lead this payment came from, where we could match it.
-   */
-  enquiry?: (number | null) | Enquiry;
-  /**
-   * Created automatically for Accelerator purchases.
-   */
-  student?: (number | null) | Student;
-  amountCents?: number | null;
-  currency?: string | null;
-  /**
-   * Search this in your Stripe dashboard to see the full record.
-   */
-  stripeSessionId?: string | null;
-  stripePaymentIntentId?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -983,36 +985,16 @@ export interface PayloadLockedDocument {
   id: number;
   document?:
     | ({
-        relationTo: 'page-copy';
-        value: number | PageCopy;
-      } | null)
-    | ({
-        relationTo: 'programs';
-        value: number | Program;
-      } | null)
-    | ({
-        relationTo: 'testimonials';
-        value: number | Testimonial;
-      } | null)
-    | ({
-        relationTo: 'faqs';
-        value: number | Faq;
-      } | null)
-    | ({
-        relationTo: 'company-logos';
-        value: number | CompanyLogo;
-      } | null)
-    | ({
-        relationTo: 'media';
-        value: number | Media;
-      } | null)
-    | ({
-        relationTo: 'lessons';
-        value: number | Lesson;
+        relationTo: 'enquiries';
+        value: number | Enquiry;
       } | null)
     | ({
         relationTo: 'students';
         value: number | Student;
+      } | null)
+    | ({
+        relationTo: 'payments';
+        value: number | Payment;
       } | null)
     | ({
         relationTo: 'coaching-sessions';
@@ -1023,12 +1005,32 @@ export interface PayloadLockedDocument {
         value: number | StudentDocument;
       } | null)
     | ({
-        relationTo: 'enquiries';
-        value: number | Enquiry;
+        relationTo: 'lessons';
+        value: number | Lesson;
       } | null)
     | ({
-        relationTo: 'payments';
-        value: number | Payment;
+        relationTo: 'page-copy';
+        value: number | PageCopy;
+      } | null)
+    | ({
+        relationTo: 'programs';
+        value: number | Program;
+      } | null)
+    | ({
+        relationTo: 'faqs';
+        value: number | Faq;
+      } | null)
+    | ({
+        relationTo: 'testimonials';
+        value: number | Testimonial;
+      } | null)
+    | ({
+        relationTo: 'media';
+        value: number | Media;
+      } | null)
+    | ({
+        relationTo: 'company-logos';
+        value: number | CompanyLogo;
       } | null)
     | ({
         relationTo: 'users';
@@ -1075,6 +1077,151 @@ export interface PayloadMigration {
   batch?: number | null;
   updatedAt: string;
   createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "enquiries_select".
+ */
+export interface EnquiriesSelect<T extends boolean = true> {
+  name?: T;
+  email?: T;
+  phone?: T;
+  organisation?: T;
+  audience?: T;
+  enquiryType?: T;
+  program?: T;
+  value?: T;
+  message?: T;
+  activity?:
+    | T
+    | {
+        date?: T;
+        type?: T;
+        note?: T;
+        id?: T;
+      };
+  status?: T;
+  followUpDate?: T;
+  priority?: T;
+  source?: T;
+  consent?: T;
+  notes?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "students_select".
+ */
+export interface StudentsSelect<T extends boolean = true> {
+  name?: T;
+  email?: T;
+  programs?: T;
+  phone?: T;
+  startDate?: T;
+  status?: T;
+  unlockEverything?: T;
+  enquiry?: T;
+  completedDays?: T;
+  sendWelcome?: T;
+  notes?: T;
+  lastSeen?: T;
+  pausedAt?: T;
+  lastNudgedAt?: T;
+  loginToken?: T;
+  loginTokenExpires?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "payments_select".
+ */
+export interface PaymentsSelect<T extends boolean = true> {
+  customerName?: T;
+  customerEmail?: T;
+  programName?: T;
+  amountFormatted?: T;
+  status?: T;
+  paidAt?: T;
+  program?: T;
+  enquiry?: T;
+  student?: T;
+  amountCents?: T;
+  currency?: T;
+  stripeSessionId?: T;
+  stripePaymentIntentId?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "coaching-sessions_select".
+ */
+export interface CoachingSessionsSelect<T extends boolean = true> {
+  student?: T;
+  title?: T;
+  scheduledFor?: T;
+  status?: T;
+  meetingLink?: T;
+  location?: T;
+  prep?: T;
+  outcome?: T;
+  privateNotes?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "student-documents_select".
+ */
+export interface StudentDocumentsSelect<T extends boolean = true> {
+  student?: T;
+  title?: T;
+  kind?: T;
+  note?: T;
+  prefix?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  url?: T;
+  thumbnailURL?: T;
+  filename?: T;
+  mimeType?: T;
+  filesize?: T;
+  width?: T;
+  height?: T;
+  focalX?: T;
+  focalY?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "lessons_select".
+ */
+export interface LessonsSelect<T extends boolean = true> {
+  day?: T;
+  title?: T;
+  summary?: T;
+  youtubeId?: T;
+  durationMinutes?: T;
+  task?: T;
+  checklist?:
+    | T
+    | {
+        text?: T;
+        id?: T;
+      };
+  resources?:
+    | T
+    | {
+        title?: T;
+        url?: T;
+        file?: T;
+        id?: T;
+      };
+  coachNote?: T;
+  published?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1252,6 +1399,19 @@ export interface ProgramsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "faqs_select".
+ */
+export interface FaqsSelect<T extends boolean = true> {
+  question?: T;
+  answer?: T;
+  audience?: T;
+  order?: T;
+  programs?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "testimonials_select".
  */
 export interface TestimonialsSelect<T extends boolean = true> {
@@ -1268,37 +1428,12 @@ export interface TestimonialsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "faqs_select".
- */
-export interface FaqsSelect<T extends boolean = true> {
-  question?: T;
-  answer?: T;
-  audience?: T;
-  order?: T;
-  programs?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "company-logos_select".
- */
-export interface CompanyLogosSelect<T extends boolean = true> {
-  name?: T;
-  logo?: T;
-  logoPath?: T;
-  active?: T;
-  order?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "media_select".
  */
 export interface MediaSelect<T extends boolean = true> {
   alt?: T;
   credit?: T;
+  prefix?: T;
   updatedAt?: T;
   createdAt?: T;
   url?: T;
@@ -1347,145 +1482,14 @@ export interface MediaSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "lessons_select".
+ * via the `definition` "company-logos_select".
  */
-export interface LessonsSelect<T extends boolean = true> {
-  day?: T;
-  title?: T;
-  summary?: T;
-  youtubeId?: T;
-  durationMinutes?: T;
-  task?: T;
-  checklist?:
-    | T
-    | {
-        text?: T;
-        id?: T;
-      };
-  resources?:
-    | T
-    | {
-        title?: T;
-        url?: T;
-        file?: T;
-        id?: T;
-      };
-  coachNote?: T;
-  published?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "students_select".
- */
-export interface StudentsSelect<T extends boolean = true> {
+export interface CompanyLogosSelect<T extends boolean = true> {
   name?: T;
-  email?: T;
-  programs?: T;
-  phone?: T;
-  startDate?: T;
-  status?: T;
-  unlockEverything?: T;
-  enquiry?: T;
-  completedDays?: T;
-  sendWelcome?: T;
-  notes?: T;
-  lastSeen?: T;
-  pausedAt?: T;
-  lastNudgedAt?: T;
-  loginToken?: T;
-  loginTokenExpires?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "coaching-sessions_select".
- */
-export interface CoachingSessionsSelect<T extends boolean = true> {
-  student?: T;
-  title?: T;
-  scheduledFor?: T;
-  status?: T;
-  meetingLink?: T;
-  location?: T;
-  prep?: T;
-  outcome?: T;
-  privateNotes?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "student-documents_select".
- */
-export interface StudentDocumentsSelect<T extends boolean = true> {
-  student?: T;
-  title?: T;
-  kind?: T;
-  note?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  url?: T;
-  thumbnailURL?: T;
-  filename?: T;
-  mimeType?: T;
-  filesize?: T;
-  width?: T;
-  height?: T;
-  focalX?: T;
-  focalY?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "enquiries_select".
- */
-export interface EnquiriesSelect<T extends boolean = true> {
-  name?: T;
-  email?: T;
-  phone?: T;
-  organisation?: T;
-  audience?: T;
-  enquiryType?: T;
-  program?: T;
-  value?: T;
-  message?: T;
-  activity?:
-    | T
-    | {
-        date?: T;
-        type?: T;
-        note?: T;
-        id?: T;
-      };
-  status?: T;
-  followUpDate?: T;
-  priority?: T;
-  source?: T;
-  consent?: T;
-  notes?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "payments_select".
- */
-export interface PaymentsSelect<T extends boolean = true> {
-  customerName?: T;
-  customerEmail?: T;
-  programName?: T;
-  amountFormatted?: T;
-  status?: T;
-  paidAt?: T;
-  program?: T;
-  enquiry?: T;
-  student?: T;
-  amountCents?: T;
-  currency?: T;
-  stripeSessionId?: T;
-  stripePaymentIntentId?: T;
+  logo?: T;
+  logoPath?: T;
+  active?: T;
+  order?: T;
   updatedAt?: T;
   createdAt?: T;
 }

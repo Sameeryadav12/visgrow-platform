@@ -2,8 +2,9 @@ import type { CollectionConfig } from "payload";
 
 export const Media: CollectionConfig = {
   slug: "media",
+  labels: { singular: "Photo", plural: "Photos" },
   admin: {
-    group: "Content",
+    group: "4 · Pictures",
     description: "Photos, logos and images used anywhere on the site.",
   },
   access: {

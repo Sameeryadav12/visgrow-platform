@@ -13,7 +13,7 @@ export const Enquiries: CollectionConfig = {
   slug: "enquiries",
   labels: { singular: "Enquiry", plural: "Enquiries" },
   admin: {
-    group: "Leads",
+    group: "1 · People",
     useAsTitle: "name",
     defaultColumns: [
       "name",

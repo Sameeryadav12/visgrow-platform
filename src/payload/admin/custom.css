@@ -177,13 +177,37 @@ body,
   box-shadow: 0 2px 10px rgba(105, 24, 220, 0.1);
 }
 
+/*
+ * Group headings.
+ *
+ * These were 10.5px uppercase grey — technically a heading, practically
+ * invisible. With fifteen menu items the headings are the only thing making
+ * the list navigable, so they get real weight and a rule above them to
+ * separate the sections properly.
+ */
 .nav-group__label {
-  font-size: 10.5px;
+  font-size: 11.5px;
   font-weight: 800;
-  letter-spacing: 1.3px;
+  letter-spacing: 0.8px;
   text-transform: uppercase;
-  color: var(--vg-muted);
-  padding: 20px 22px 6px;
+  color: var(--vg-purple);
+  padding: 22px 22px 8px;
+  margin-top: 6px;
+  border-top: 1px solid var(--vg-line);
+}
+
+/* No rule above the very first group — it would float under the logo. */
+.nav-group:first-child .nav-group__label,
+.nav .nav-group:first-of-type .nav-group__label {
+  border-top: none;
+  margin-top: 0;
+  padding-top: 14px;
+}
+
+/* Slightly roomier rows. This gets used on a laptop trackpad, often in a
+   hurry, and 9px of padding makes for a small target. */
+.nav__link {
+  padding: 11px 13px;
 }
 
 /* The last nav item was disappearing behind the floating help bubble. */
@@ -194,12 +218,22 @@ body,
 
 /* --------------------------------------------------------------- buttons */
 
-.btn--style-primary,
-.btn--style-primary .btn__content {
+/*
+ * Primary buttons. The colour goes on the button itself and the inner
+ * `.btn__content` is left transparent — painting both is what let a
+ * background escape the rounded corners on the login screen.
+ */
+.btn--style-primary {
   background: var(--vg-purple);
   border-color: var(--vg-purple);
   border-radius: 999px;
+  overflow: hidden;
   font-weight: 700;
+}
+
+.btn--style-primary .btn__content {
+  background: none;
+  border: none;
 }
 
 .btn--style-primary:hover {
@@ -429,14 +463,84 @@ body,
   border-radius: 18px;
   border: 1px solid var(--vg-line);
   background: #fff;
-  padding: 30px;
+  /* Slightly more generous than the fields need, so the card doesn't feel
+     like the inputs are pressed against its edges. */
+  padding: 34px 32px 30px;
   box-shadow: 0 20px 50px rgba(105, 24, 220, 0.1);
 }
 
-.login .form-submit .btn {
-  background: var(--vg-gradient);
-  border: none;
+/* Room between the last field and the button, and between the fields
+   themselves — the default spacing reads as cramped at this card width. */
+.login__form .field-type {
+  margin-bottom: 18px;
+}
+
+.login__form .form-submit {
+  margin-top: 26px;
+}
+
+/* "Forgot password?" was sitting hard against the password field. */
+.login__form .form-submit + a,
+.login .login__links,
+.login__form a {
+  display: inline-block;
+  margin-top: 2px;
+  color: var(--vg-purple);
+  font-weight: 600;
+  text-underline-offset: 3px;
+}
+
+/*
+ * The Login button.
+ *
+ * Payload nests a `.btn__content` inside every `.btn`, and both can carry a
+ * background. Setting the gradient on the outer button alone left the inner
+ * element painting its own flat colour on top, and with no radius or clipping
+ * on the outer box the gradient spilled out past the rounded corners and the
+ * edge of the card.
+ *
+ * So: the gradient goes on the button, the inner element is made transparent,
+ * and the whole thing is clipped to the pill. `box-sizing` matters because
+ * `width: 100%` plus horizontal padding would otherwise push it wider than
+ * the form it sits in.
+ */
+.login .form-submit {
   width: 100%;
+}
+
+.login .form-submit .btn,
+.login .form-submit .btn--style-primary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: 100%;
+  margin: 0;
+  padding: 14px 24px;
+  border: none;
+  border-radius: 999px;
+  overflow: hidden;
+  background: var(--vg-gradient);
+  box-shadow: 0 10px 26px rgba(105, 24, 220, 0.28);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.login .form-submit .btn .btn__content,
+.login .form-submit .btn .btn__label {
+  background: none;
+  border: none;
+  padding: 0;
+  color: #fff;
+  font-weight: 800;
+}
+
+.login .form-submit .btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 14px 30px rgba(233, 75, 108, 0.32);
+}
+
+.login .form-submit .btn:active {
+  transform: translateY(0);
 }
 
 /* ------------------------------------------------------------ dashboard */

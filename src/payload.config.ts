@@ -84,19 +84,35 @@ export default buildConfig({
     },
   },
 
+  /*
+   * Order matters: the sidebar groups appear in the order their first
+   * collection is registered. So this list is sorted by how often Mustafa
+   * needs the thing, not by how the data is modelled — enquiries and
+   * customers at the top because that's the money, setup at the bottom
+   * because he'll touch it twice a year.
+   */
   collections: [
-    PageCopy,
-    Programs,
-    Testimonials,
-    Faqs,
-    CompanyLogos,
-    Media,
-    Lessons,
+    // 1 · People
+    Enquiries,
     Students,
+    Payments,
+
+    // 2 · Customer work
     CoachingSessions,
     StudentDocuments,
-    Enquiries,
-    Payments,
+    Lessons,
+
+    // 3 · Website words
+    PageCopy,
+    Programs,
+    Faqs,
+    Testimonials,
+
+    // 4 · Pictures
+    Media,
+    CompanyLogos,
+
+    // 5 · Setup
     Users,
   ],
 

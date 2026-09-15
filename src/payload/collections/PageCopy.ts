@@ -36,7 +36,7 @@ const body: Field = {
 const cardItems = (description: string): Field => ({
   name: "items",
   type: "array",
-  labels: { singular: "Item", plural: "Items" },
+  labels: { singular: "Card", plural: "Cards" },
   admin: { components: { RowLabel: "@/payload/admin/RowLabel#TitleRowLabel" }, description },
   fields: [
     {
@@ -65,9 +65,9 @@ const plainItems = (label: string, description: string): Field => ({
 
 export const PageCopy: CollectionConfig = {
   slug: "page-copy",
-  labels: { singular: "Page copy", plural: "Page copy" },
+  labels: { singular: "Page", plural: "Website pages" },
   admin: {
-    group: "Content",
+    group: "3 · Website words",
     useAsTitle: "title",
     defaultColumns: ["title", "path", "updatedAt"],
     description:

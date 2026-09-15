@@ -16,7 +16,7 @@ export const StudentDocuments: CollectionConfig = {
   slug: "student-documents",
   labels: { singular: "Customer file", plural: "Customer files" },
   admin: {
-    group: "Program",
+    group: "2 · Customer work",
     useAsTitle: "title",
     defaultColumns: ["title", "student", "kind", "createdAt"],
     description:

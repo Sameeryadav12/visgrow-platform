@@ -4,7 +4,7 @@ export const Navigation: GlobalConfig = {
   slug: "navigation",
   label: "Menu (header)",
   admin: {
-    group: "Settings",
+    group: "5 · Setup",
     description: "The menu across the top of every page.",
   },
   access: { read: () => true },
