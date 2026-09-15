@@ -99,6 +99,47 @@ const card: React.CSSProperties = {
   transition: "box-shadow .2s ease, transform .2s ease",
 };
 
+/** The four things that happen most. Bigger, warmer, harder to miss. */
+function BigJob({
+  href,
+  emoji,
+  title,
+  hint,
+}: {
+  href: string;
+  emoji: string;
+  title: string;
+  hint: string;
+}) {
+  return (
+    <Link
+      href={href}
+      style={{
+        display: "block",
+        padding: "22px 22px 20px",
+        borderRadius: 16,
+        border: "1.5px solid #e5d9fb",
+        background: "#faf7ff",
+        textDecoration: "none",
+        color: "#241a33",
+      }}
+    >
+      <span
+        aria-hidden="true"
+        style={{ display: "block", fontSize: 24, marginBottom: 10 }}
+      >
+        {emoji}
+      </span>
+      <strong style={{ display: "block", fontSize: 16, marginBottom: 5 }}>
+        {title}
+      </strong>
+      <span style={{ fontSize: 12.5, color: "#5c5470", lineHeight: 1.55 }}>
+        {hint}
+      </span>
+    </Link>
+  );
+}
+
 function Shortcut({
   href,
   title,
@@ -232,6 +273,59 @@ export const Dashboard = async () => {
         </div>
       </div>
 
+      {/* ------------------------------------------------------ common jobs */}
+      {/*
+        Four buttons for the four things that actually happen in a week.
+        Everything in the sidebar is still there, but nobody should have to
+        work out which of fifteen menu items means "someone paid me".
+      */}
+      <p
+        style={{
+          margin: "0 0 12px",
+          fontSize: 11.5,
+          fontWeight: 800,
+          letterSpacing: 1.4,
+          textTransform: "uppercase",
+          color: "#9b93ad",
+        }}
+      >
+        What do you want to do?
+      </p>
+
+      <div
+        style={{
+          display: "grid",
+          gap: 14,
+          gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))",
+          marginBottom: 34,
+        }}
+      >
+        <BigJob
+          href="/admin/collections/students/create"
+          emoji="🎉"
+          title="Someone paid"
+          hint="Add them. They get their portal link by email automatically."
+        />
+        <BigJob
+          href="/admin/collections/coaching-sessions/create"
+          emoji="📅"
+          title="Book a session"
+          hint="It shows up in their portal with the time, link and what to bring."
+        />
+        <BigJob
+          href="/admin/collections/student-documents/create"
+          emoji="📎"
+          title="Send someone a file"
+          hint="Feedback, a template, a session summary. Only they can open it."
+        />
+        <BigJob
+          href="/admin/collections/programs"
+          emoji="💲"
+          title="Change a price"
+          hint="Edit it once here and it updates everywhere on the site."
+        />
+      </div>
+
       {/* ------------------------------------------------ common edit jobs */}
       <p
         style={{
@@ -296,7 +390,7 @@ export const Dashboard = async () => {
           color: "#9b93ad",
         }}
       >
-        14-Day Accelerator
+        Your customers
       </p>
 
       <div
@@ -309,13 +403,28 @@ export const Dashboard = async () => {
       >
         <Shortcut
           href="/admin/collections/students"
-          title="Students"
-          hint="Add someone once they've paid. Days unlock from their start date."
+          title="Customers"
+          hint="Everyone who has paid. Tick what they bought and they see it in their portal."
+        />
+        <Shortcut
+          href="/admin/collections/coaching-sessions"
+          title="Sessions"
+          hint="One-to-ones you've booked, with the link and the prep notes."
+        />
+        <Shortcut
+          href="/admin/collections/student-documents"
+          title="Customer files"
+          hint="Feedback and templates you've sent. Private to each person."
         />
         <Shortcut
           href="/admin/collections/lessons"
           title="Program days"
-          hint="The 14 days — videos, tasks and downloads."
+          hint="The 14 Accelerator days — videos, tasks and downloads."
+        />
+        <Shortcut
+          href="/admin/collections/payments"
+          title="Payments"
+          hint="Every card payment, recorded automatically. Read-only."
         />
       </div>
 

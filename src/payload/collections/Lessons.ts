@@ -12,7 +12,7 @@ export const Lessons: CollectionConfig = {
   slug: "lessons",
   labels: { singular: "Day", plural: "Program days" },
   admin: {
-    group: "Program",
+    group: "2 · Customer work",
     useAsTitle: "title",
     defaultColumns: ["day", "title", "published", "durationMinutes"],
     description:

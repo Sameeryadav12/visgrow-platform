@@ -84,19 +84,35 @@ export default buildConfig({
     },
   },
 
+  /*
+   * Order matters: the sidebar groups appear in the order their first
+   * collection is registered. So this list is sorted by how often Mustafa
+   * needs the thing, not by how the data is modelled — enquiries and
+   * customers at the top because that's the money, setup at the bottom
+   * because he'll touch it twice a year.
+   */
   collections: [
-    PageCopy,
-    Programs,
-    Testimonials,
-    Faqs,
-    CompanyLogos,
-    Media,
-    Lessons,
+    // 1 · People
+    Enquiries,
     Students,
+    Payments,
+
+    // 2 · Customer work
     CoachingSessions,
     StudentDocuments,
-    Enquiries,
-    Payments,
+    Lessons,
+
+    // 3 · Website words
+    PageCopy,
+    Programs,
+    Faqs,
+    Testimonials,
+
+    // 4 · Pictures
+    Media,
+    CompanyLogos,
+
+    // 5 · Setup
     Users,
   ],
 
@@ -113,27 +129,43 @@ export default buildConfig({
    * It only switches on when the token exists, so local development keeps
    * writing to disk with no extra setup and no account required.
    */
-  plugins: process.env.BLOB_READ_WRITE_TOKEN
-    ? [
-        vercelBlobStorage({
-          enabled: true,
-          token: process.env.BLOB_READ_WRITE_TOKEN,
-          // Non-negotiable here. The Payload adapter can only create *public*
-          // blobs, so the only thing protecting a file is how hard its URL is
-          // to guess. Without a random suffix, someone's resume would sit at a
-          // predictable path anyone could type. With it, the filename carries
-          // enough entropy that guessing is not a realistic attack.
-          addRandomSuffix: true,
-          collections: {
-            media: true,
-            // Customer files are stored here too, but their URL is never sent
-            // to a browser — /api/portal/file/[id] checks who is asking and
-            // fetches the bytes server-side. See that route for why.
-            "student-documents": true,
-          },
-        }),
-      ]
-    : [],
+  plugins: [
+      vercelBlobStorage({
+        /**
+         * Always registered, switched on by the token.
+         *
+         * This used to be a conditional `token ? [plugin] : []`, and that
+         * silently broke the whole admin panel. The import map — the file
+         * that tells the admin bundle which client components exist — is
+         * generated from this config by `payload generate:importmap`, which
+         * runs locally where the token is NOT set. So the plugin was absent
+         * when the map was generated and present at runtime on Vercel: the
+         * admin asked for a component the map had never heard of, rendered
+         * nothing, and served a blank white page with no error anywhere.
+         *
+         * Registering it unconditionally keeps the import map identical in
+         * both environments. `enabled` does the actual switching, and
+         * `alwaysInsertFields` keeps the database schema the same too, so
+         * local and production can't drift apart again.
+         */
+        enabled: Boolean(process.env.BLOB_READ_WRITE_TOKEN),
+        alwaysInsertFields: true,
+        token: process.env.BLOB_READ_WRITE_TOKEN ?? "",
+        // Non-negotiable here. The Payload adapter can only create *public*
+        // blobs, so the only thing protecting a file is how hard its URL is
+        // to guess. Without a random suffix, someone's resume would sit at a
+        // predictable path anyone could type. With it, the filename carries
+        // enough entropy that guessing is not a realistic attack.
+        addRandomSuffix: true,
+        collections: {
+          media: true,
+          // Customer files are stored here too, but their URL is never sent
+          // to a browser — /api/portal/file/[id] checks who is asking and
+          // fetches the bytes server-side. See that route for why.
+          "student-documents": true,
+        },
+    }),
+  ],
 
   editor: lexicalEditor(),
 

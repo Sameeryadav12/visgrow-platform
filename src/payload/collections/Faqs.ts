@@ -4,7 +4,7 @@ export const Faqs: CollectionConfig = {
   slug: "faqs",
   labels: { singular: "FAQ", plural: "FAQs" },
   admin: {
-    group: "Content",
+    group: "3 · Website words",
     useAsTitle: "question",
     defaultColumns: ["question", "audience", "order"],
     description:

@@ -17,7 +17,7 @@ export const CoachingSessions: CollectionConfig = {
   slug: "coaching-sessions",
   labels: { singular: "Session", plural: "Sessions" },
   admin: {
-    group: "Program",
+    group: "2 · Customer work",
     useAsTitle: "title",
     defaultColumns: ["title", "student", "scheduledFor", "status"],
     description:

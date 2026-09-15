@@ -20,7 +20,7 @@ export const Students: CollectionConfig = {
   slug: "students",
   labels: { singular: "Customer", plural: "Customers" },
   admin: {
-    group: "Program",
+    group: "1 · People",
     useAsTitle: "name",
     defaultColumns: ["name", "email", "programs", "status", "lastSeen"],
     description:

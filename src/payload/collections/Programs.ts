@@ -2,8 +2,9 @@ import type { CollectionConfig } from "payload";
 
 export const Programs: CollectionConfig = {
   slug: "programs",
+  labels: { singular: "Program", plural: "Programs & prices" },
   admin: {
-    group: "Content",
+    group: "3 · Website words",
     useAsTitle: "title",
     defaultColumns: ["title", "price", "audience", "featured"],
     description:
@@ -85,7 +86,6 @@ export const Programs: CollectionConfig = {
       name: "includes",
       type: "array",
       label: "What's included",
-      labels: { singular: "Item", plural: "What's included" },
       admin: { components: { RowLabel: "@/payload/admin/RowLabel#TextRowLabel" }, description: "Bullet list on the pricing card." },
       fields: [{ name: "item", label: "Item", type: "text", required: true }],
     },

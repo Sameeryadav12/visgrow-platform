@@ -12,6 +12,15 @@ Each released version is a git tag, so any of them can be checked out or redeplo
 
 ---
 
+## [1.2.1] — 2026-09-14
+
+### Fixed
+- **The admin panel served a blank white page on Vercel.** Next 16 builds with Turbopack by default, and Payload's config comes back `null` inside the admin's server layout under a Turbopack production build, so the panel rendered an empty shell — HTTP 200, no console error, no build error, and the public site working normally. The build now runs `next build --webpack`. Upstream: [payloadcms/payload#15429](https://github.com/payloadcms/payload/issues/15429).
+- The build script now regenerates Payload's import map, so it can no longer drift from the deployed config.
+- The Vercel Blob plugin is registered unconditionally and switched on by the token, rather than being present only when the token exists. A plugin that differs between build time and run time is a hazard regardless of whether it caused this particular failure.
+
+---
+
 ## [1.2.0] — 2026-09-12
 
 ### Added

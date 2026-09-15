@@ -4,7 +4,7 @@ export const SiteSettings: GlobalConfig = {
   slug: "site-settings",
   label: "Site settings",
   admin: {
-    group: "Settings",
+    group: "5 · Setup",
     description:
       "Phone number, email, address and the bits that appear on every page.",
   },

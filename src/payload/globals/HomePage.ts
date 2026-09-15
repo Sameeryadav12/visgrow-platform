@@ -37,7 +37,7 @@ export const HomePage: GlobalConfig = {
   slug: "home-page",
   label: "Home page copy",
   admin: {
-    group: "Content",
+    group: "3 · Website words",
     description:
       "Every word on the home page, section by section, in the order they appear. Leave a field blank to keep what's currently on the site.",
   },

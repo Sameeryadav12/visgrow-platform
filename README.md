@@ -176,6 +176,18 @@ DATABASE_URI=<hosted connection string> npm run dev
 Watch for `[visgrow] Setup complete.` in the output, then stop it. The hosted
 app reads and writes normally from that point on.
 
+**The production build uses webpack, not Turbopack.** Next 16 builds with
+Turbopack by default, and Payload's admin panel does not survive it: the
+config comes back `null` inside `(payload)/layout.tsx` in an RSC context, so
+the admin renders an empty shell. The symptom is nasty — a blank white page,
+HTTP 200, no error in the browser console, nothing in the build log, and the
+public site working perfectly, because the public pages never touch Payload's
+RSC layout. Tracked upstream as
+[payloadcms/payload#15429](https://github.com/payloadcms/payload/issues/15429).
+
+`next build --webpack` avoids it. The build script also regenerates the
+import map, so it can't drift from what ships. Revisit once that issue closes.
+
 **Schema.** Push is on locally and off on Vercel (`push: !process.env.VERCEL`).
 Push compares the config to the live database and runs the DDL to reconcile
 them, inside whichever request opens the first connection. On a serverless

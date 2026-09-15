@@ -4,7 +4,7 @@ export const FooterGlobal: GlobalConfig = {
   slug: "footer",
   label: "Footer",
   admin: {
-    group: "Settings",
+    group: "5 · Setup",
     description: "The link columns at the bottom of every page.",
   },
   access: { read: () => true },
