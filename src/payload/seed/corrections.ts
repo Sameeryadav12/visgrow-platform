@@ -323,6 +323,19 @@ async function applyNovemberProgramUpdates(payload: Payload) {
  * left exactly as they are, so nothing Mustafa has edited is overwritten.
  */
 async function ensureAcademy(payload: Payload) {
+  try {
+    await ensureAcademyInner(payload);
+  } catch (err) {
+    // The Academy tables only exist after the app has been started once in
+    // development against this database. Until then this is expected, and it
+    // must never stop the other corrections from running.
+    payload.logger.warn(
+      `[visgrow] Academy setup skipped: ${err instanceof Error ? err.message.split("\n")[0] : "unknown error"}`,
+    );
+  }
+}
+
+async function ensureAcademyInner(payload: Payload) {
   const program = await payload.find({
     collection: "programs",
     where: { slug: { equals: "skills-development" } },
@@ -410,7 +423,6 @@ export async function runCorrections(payload: Payload) {
   try {
     await applyConfirmedDetails(payload);
     await applyNovemberProgramUpdates(payload);
-    await ensureAcademy(payload);
     await ensureScorecardLink(payload);
 
     // Home page copy
@@ -489,6 +501,8 @@ export async function runCorrections(payload: Payload) {
       });
       total += c.count;
     }
+
+    await ensureAcademy(payload);
 
     if (total > 0) {
       payload.logger.info(
