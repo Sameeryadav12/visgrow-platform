@@ -15,6 +15,16 @@ import type { Payload } from "payload";
 type Correction = { find: string; replace: string; why: string };
 
 const CORRECTIONS: Correction[] = [
+  {
+    why: "Payment plans are only offered on Ongoing Career Coaching and the Hosted Internship.",
+    find: "*Pricing is indicative and confirmed at your Career Strategy & Gap Analysis. Payment plans available on selected programs.",
+    replace: "*Payment plans are available on Ongoing Career Coaching and the Hosted Internship only.",
+  },
+  {
+    why: "Payment plans are only offered on Ongoing Career Coaching and the Hosted Internship.",
+    find: "Payment plans are available on the larger programs; ask us when you enquire.",
+    replace: "Payment plans are available on Ongoing Career Coaching and the Hosted Internship; ask us when you enquire.",
+  },
   // --- November 2026 client feedback (Mustafa). Exact-string swaps so saved
   // copy matches the updated code fallbacks.
   {
@@ -401,6 +411,29 @@ export async function runCorrections(payload: Payload) {
       });
       total += c.count;
       counter.flagged.push(...c.flagged);
+    }
+
+    // FAQs are their own collection, so they need the same pass.
+    const faqs = await payload.find({
+      collection: "faqs",
+      limit: 200,
+      depth: 0,
+      pagination: false,
+    });
+    for (const doc of faqs.docs) {
+      const c = { count: 0, flagged: [] as string[] };
+      const fixed = fix(doc, c) as Record<string, unknown>;
+      if (c.count === 0) continue;
+      delete fixed.id;
+      delete fixed.updatedAt;
+      delete fixed.createdAt;
+      await payload.update({
+        collection: "faqs",
+        id: doc.id,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        data: fixed as any,
+      });
+      total += c.count;
     }
 
     if (total > 0) {

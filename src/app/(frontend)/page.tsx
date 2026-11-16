@@ -304,7 +304,7 @@ const faqs = [
   },
   {
     q: "I can't afford this right now. What are my options?",
-    a: "Start with the Career Strategy & Gap Analysis — it's the lowest-cost entry point and often the highest-value hour you'll spend, because it tells you exactly what to fix. Payment plans are available on the larger programs; ask us when you enquire.",
+    a: "Start with the Career Strategy & Gap Analysis — it's the lowest-cost entry point and often the highest-value hour you'll spend, because it tells you exactly what to fix. Payment plans are available on Ongoing Career Coaching and the Hosted Internship; ask us when you enquire.",
   },
   {
     q: "How do I get started?",
