@@ -4,6 +4,7 @@ import Image from "next/image";
 import FaqAccordion from "@/components/FaqAccordion";
 import PartnerEnquiryForm from "@/components/PartnerEnquiryForm";
 import WorkshopFeedback from "@/components/WorkshopFeedback";
+import SessionPhotos from "@/components/SessionPhotos";
 import { studyAdelaideFeedback } from "@/lib/workshop-feedback";
 import { getSiteSettings } from "@/lib/cms";
 import { getPageCopy, t, list, texts } from "@/lib/page-copy";
@@ -356,6 +357,16 @@ export default async function EducationPartnersPage() {
           </ul>
         </div>
       </section>
+
+      <SessionPhotos
+        heading="Sessions we have delivered with education providers."
+        photos={[
+          { src: "study-adelaide-group.jpg", cap: "Study Adelaide student group" },
+          { src: "uoa-pm-society-group.jpg", cap: "University of Adelaide Project Management Society" },
+          { src: "tafesa-future-of-work.jpg", cap: "TAFE SA — Future of Work session" },
+          { src: "northern-adelaide-senior-college.jpg", cap: "Northern Adelaide Senior College" },
+        ]}
+      />
 
       <WorkshopFeedback
         heading="What attendees said after our workshops."

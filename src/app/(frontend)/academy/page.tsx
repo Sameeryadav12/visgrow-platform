@@ -4,6 +4,7 @@ import Image from "next/image";
 import FaqAccordion from "@/components/FaqAccordion";
 import PartnerEnquiryForm from "@/components/PartnerEnquiryForm";
 import WorkshopFeedback from "@/components/WorkshopFeedback";
+import SessionPhotos from "@/components/SessionPhotos";
 import { acsFeedback } from "@/lib/workshop-feedback";
 import { getSiteSettings } from "@/lib/cms";
 import { getPageCopy, t, list, texts } from "@/lib/page-copy";
@@ -346,6 +347,16 @@ export default async function AcademyPage() {
           </div>
         </div>
       </section>
+
+      <SessionPhotos
+        heading="Academy workshops in action."
+        photos={[
+          { src: "acs-personal-branding-session.jpg", cap: "Personal branding workshop with ACS" },
+          { src: "pmi-adelaide-speaker.jpg", cap: "Presenting for PMI Adelaide" },
+          { src: "acs-career-coaching-group.jpg", cap: "ACS career coaching workshop" },
+          { src: "issua-workshop-room.jpg", cap: "A full room at a student workshop" },
+        ]}
+      />
 
       <WorkshopFeedback
         heading="What attendees said after our workshops."

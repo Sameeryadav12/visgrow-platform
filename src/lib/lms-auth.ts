@@ -140,6 +140,24 @@ export function hasAcceleratorAccess(
   return nothingRecorded && Boolean(student.startDate);
 }
 
+/** Program slug that unlocks the Academy learning area (/my-academy). */
+export const ACADEMY_SLUG = "skills-development";
+
+/**
+ * Has this person got the Skills Development program?
+ *
+ * Same principle as the Accelerator: being signed in is not the same as
+ * having this particular program. Unlike the Accelerator there is nothing to
+ * grandfather in, so an empty program list means no access.
+ */
+export function hasAcademyAccess(
+  student: Student,
+  programSlugs: string[],
+): boolean {
+  if (student.unlockEverything) return true;
+  return programSlugs.includes(ACADEMY_SLUG);
+}
+
 /** Resolves a student's program slugs, for use with hasAcceleratorAccess. */
 export async function getStudentProgramSlugs(
   student: Student,

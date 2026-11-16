@@ -4,6 +4,7 @@ import Image from "next/image";
 import FaqAccordion from "@/components/FaqAccordion";
 import PartnerEnquiryForm from "@/components/PartnerEnquiryForm";
 import WorkshopFeedback from "@/components/WorkshopFeedback";
+import SessionPhotos from "@/components/SessionPhotos";
 import { solutionsPlusFeedback } from "@/lib/workshop-feedback";
 import { getSiteSettings } from "@/lib/cms";
 import { getPageCopy, t, list, texts } from "@/lib/page-copy";
@@ -376,6 +377,16 @@ export default async function EmployersPage() {
           </div>
         </div>
       </section>
+
+      <SessionPhotos
+        heading="Workshops we have delivered for organisations."
+        photos={[
+          { src: "solutions-plus-session.jpg", cap: "Solutions Plus team workshop" },
+          { src: "solutions-plus-team.jpg", cap: "On-site with the Solutions Plus team" },
+          { src: "pmi-adelaide-room.jpg", cap: "PMI Adelaide personal branding workshop" },
+          { src: "acs-presenting.jpg", cap: "ACS career workshop" },
+        ]}
+      />
 
       <WorkshopFeedback
         heading="What workplace attendees said."

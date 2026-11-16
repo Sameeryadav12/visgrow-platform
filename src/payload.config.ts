@@ -14,6 +14,7 @@ import { Lessons } from "./payload/collections/Lessons";
 import { Students } from "./payload/collections/Students";
 import { StudentDocuments } from "./payload/collections/StudentDocuments";
 import { CoachingSessions } from "./payload/collections/CoachingSessions";
+import { AcademyModules } from "./payload/collections/AcademyModules";
 import { Payments } from "./payload/collections/Payments";
 import { Testimonials } from "./payload/collections/Testimonials";
 import { Faqs } from "./payload/collections/Faqs";
@@ -101,6 +102,7 @@ export default buildConfig({
     CoachingSessions,
     StudentDocuments,
     Lessons,
+    AcademyModules,
 
     // 3 · Website words
     PageCopy,

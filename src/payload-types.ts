@@ -73,6 +73,7 @@ export interface Config {
     'coaching-sessions': CoachingSession;
     'student-documents': StudentDocument;
     lessons: Lesson;
+    'academy-modules': AcademyModule;
     'page-copy': PageCopy;
     programs: Program;
     faqs: Faq;
@@ -93,6 +94,7 @@ export interface Config {
     'coaching-sessions': CoachingSessionsSelect<false> | CoachingSessionsSelect<true>;
     'student-documents': StudentDocumentsSelect<false> | StudentDocumentsSelect<true>;
     lessons: LessonsSelect<false> | LessonsSelect<true>;
+    'academy-modules': AcademyModulesSelect<false> | AcademyModulesSelect<true>;
     'page-copy': PageCopySelect<false> | PageCopySelect<true>;
     programs: ProgramsSelect<false> | ProgramsSelect<true>;
     faqs: FaqsSelect<false> | FaqsSelect<true>;
@@ -458,6 +460,51 @@ export interface StudentDocument {
   height?: number | null;
   focalX?: number | null;
   focalY?: number | null;
+}
+/**
+ * The modules people on the Skills Development program see in their Academy area. Add a video and a task to each one.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "academy-modules".
+ */
+export interface AcademyModule {
+  id: number;
+  /**
+   * Sets the order.
+   */
+  number: number;
+  title: string;
+  group: 'workplace' | 'graduate';
+  summary?: string | null;
+  covers?:
+    | {
+        text: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * The part after v= in an unlisted YouTube link. Leave blank until the video is ready.
+   */
+  youtubeId?: string | null;
+  durationMinutes?: number | null;
+  /**
+   * What they should do after watching.
+   */
+  task?: string | null;
+  resources?:
+    | {
+        title: string;
+        url: string;
+        id?: string | null;
+      }[]
+    | null;
+  coachNote?: string | null;
+  /**
+   * Only ticked modules are shown.
+   */
+  published?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * The 14 days of the Accelerator. Students see one new day each day after they start.
@@ -1009,6 +1056,10 @@ export interface PayloadLockedDocument {
         value: number | Lesson;
       } | null)
     | ({
+        relationTo: 'academy-modules';
+        value: number | AcademyModule;
+      } | null)
+    | ({
         relationTo: 'page-copy';
         value: number | PageCopy;
       } | null)
@@ -1216,6 +1267,36 @@ export interface LessonsSelect<T extends boolean = true> {
         title?: T;
         url?: T;
         file?: T;
+        id?: T;
+      };
+  coachNote?: T;
+  published?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "academy-modules_select".
+ */
+export interface AcademyModulesSelect<T extends boolean = true> {
+  number?: T;
+  title?: T;
+  group?: T;
+  summary?: T;
+  covers?:
+    | T
+    | {
+        text?: T;
+        id?: T;
+      };
+  youtubeId?: T;
+  durationMinutes?: T;
+  task?: T;
+  resources?:
+    | T
+    | {
+        title?: T;
+        url?: T;
         id?: T;
       };
   coachNote?: T;

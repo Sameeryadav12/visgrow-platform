@@ -17,6 +17,7 @@ export type PortalData = {
   upcoming: CoachingSession[];
   past: CoachingSession[];
   hasAccelerator: boolean;
+  hasAcademy: boolean;
 };
 
 /** Program slugs that unlock the day-by-day lesson area. */
@@ -29,6 +30,7 @@ export async function getPortalData(student: Student): Promise<PortalData> {
     upcoming: [],
     past: [],
     hasAccelerator: false,
+    hasAcademy: false,
   };
 
   // Belt and braces. The pages guard with requireStudent(), but this is
@@ -91,6 +93,9 @@ export async function getPortalData(student: Student): Promise<PortalData> {
         )
         .reverse(),
       hasAccelerator: programs.some((p) => ACCELERATOR_SLUGS.includes(p.slug)),
+      hasAcademy:
+        Boolean(student.unlockEverything) ||
+        programs.some((p) => p.slug === "skills-development"),
     };
   } catch {
     // A portal that loads with less in it beats a portal that 500s.

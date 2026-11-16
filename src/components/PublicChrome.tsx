@@ -16,7 +16,7 @@ import { usePathname } from "next/navigation";
  * layout that uses it stays a server component.
  */
 
-const PRIVATE_AREAS = ["/portal", "/my-program"];
+const PRIVATE_AREAS = ["/portal", "/my-program", "/my-academy"];
 
 export default function PublicChrome({
   children,

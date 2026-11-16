@@ -1,4 +1,5 @@
 import type { Payload } from "payload";
+import { academyModules } from "../../content/academy-modules";
 
 /**
  * One-time corrections to content already sitting in the database.
@@ -315,6 +316,58 @@ async function applyNovemberProgramUpdates(payload: Payload) {
 }
 
 /**
+ * Sets up the Academy learning area: the "Skills Development Program" that
+ * a customer is ticked for, and its modules.
+ *
+ * Only ever creates. If the program or any modules already exist they are
+ * left exactly as they are, so nothing Mustafa has edited is overwritten.
+ */
+async function ensureAcademy(payload: Payload) {
+  const program = await payload.find({
+    collection: "programs",
+    where: { slug: { equals: "skills-development" } },
+    limit: 1,
+    depth: 0,
+  });
+  if (!program.docs[0]) {
+    await payload.create({
+      collection: "programs",
+      data: {
+        title: "Skills Development Program",
+        slug: "skills-development",
+        tagline: "Workplace skills for teams and cohorts",
+        bestFor: "Teams and cohorts who need practical workplace skills",
+        priceNote: "Quoted per group",
+        audience: "employer",
+        pageUrl: "/academy/skills-development",
+        ctaLabel: "Let's talk about it",
+        order: 10,
+      },
+    });
+    payload.logger.info("[visgrow] Created the Skills Development program.");
+  }
+
+  const existing = await payload.count({ collection: "academy-modules" });
+  if (existing.totalDocs === 0) {
+    let n = 1;
+    for (const m of academyModules) {
+      await payload.create({
+        collection: "academy-modules",
+        data: {
+          number: n++,
+          title: m.title,
+          group: m.group,
+          summary: m.body,
+          covers: m.points.map((text) => ({ text })),
+          published: true,
+        },
+      });
+    }
+    payload.logger.info(`[visgrow] Created ${academyModules.length} Academy modules.`);
+  }
+}
+
+/**
  * Makes sure the free scorecard is linked from the main menu.
  *
  * The navigation is stored in the database and the saved copy wins over the
@@ -357,6 +410,7 @@ export async function runCorrections(payload: Payload) {
   try {
     await applyConfirmedDetails(payload);
     await applyNovemberProgramUpdates(payload);
+    await ensureAcademy(payload);
     await ensureScorecardLink(payload);
 
     // Home page copy
