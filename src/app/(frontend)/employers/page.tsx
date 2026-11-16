@@ -339,7 +339,7 @@ export default async function EmployersPage() {
           <div className="grid gap-8 lg:grid-cols-[0.6fr_1.4fr] lg:items-center">
             <div className="relative aspect-[5/4] overflow-hidden rounded-[20px] border border-white/25">
               <Image
-                src="/images/mustafa-kadir.jpg"
+                src="/images/photos/mustafa-landscape.jpg"
                 alt="Mustafa Kadir, Founder of Visgrow"
                 fill
                 sizes="(max-width: 1024px) 100vw, 30vw"

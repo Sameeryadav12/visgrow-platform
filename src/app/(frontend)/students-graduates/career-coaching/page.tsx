@@ -420,11 +420,11 @@ export default async function CareerCoachingPage() {
         <div className="mx-auto grid max-w-[1100px] items-center gap-12 px-6 lg:grid-cols-[0.8fr_1.2fr] lg:px-10">
           <div className="relative aspect-[5/4] overflow-hidden rounded-[20px] border border-white/25">
             <Image
-              src="/images/mustafa-kadir.jpg"
+              src="/images/photos/mustafa-portrait.jpg"
               alt="Mustafa Kadir, Founder of Visgrow"
               fill
               sizes="(max-width: 1024px) 100vw, 35vw"
-              className="object-cover object-center"
+              className="object-cover object-[center_22%]"
             />
           </div>
           <div>

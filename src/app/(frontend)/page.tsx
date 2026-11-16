@@ -795,11 +795,11 @@ export default async function Home() {
         <div className="mx-auto grid max-w-[1240px] items-center gap-14 px-6 lg:grid-cols-[0.75fr_1.25fr] lg:px-10">
           <div className="relative aspect-[5/4] overflow-hidden rounded-[20px] border border-white/30 shadow-[0_28px_64px_rgba(0,0,0,0.28)] lg:aspect-[4/5]">
             <Image
-              src="/images/mustafa-kadir.jpg"
+              src="/images/photos/mustafa-portrait.jpg"
               alt="Mustafa Kadir, Founder and Managing Director of Visgrow"
               fill
               sizes="(max-width: 1024px) 100vw, 30vw"
-              className="object-cover object-center"
+              className="object-cover object-[center_22%]"
             />
           </div>
 

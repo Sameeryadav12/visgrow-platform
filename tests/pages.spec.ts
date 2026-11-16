@@ -106,7 +106,13 @@ test("sitemap and robots are served", async ({ request }) => {
   const robots = await request.get("/robots.txt");
   expect(robots.status()).toBe(200);
   const text = await robots.text();
-  // The admin and the paid area must never be crawlable.
-  expect(text).toContain("Disallow: /admin");
-  expect(text).toContain("Disallow: /my-program");
+  // Outside production the whole site is blocked from search engines.
+  // On the live site (NEXT_PUBLIC_SITE_ENV=production) the admin and the
+  // paid area must be blocked individually.
+  const blockedEverything = /Disallow: \/\s*$/m.test(text);
+  if (!blockedEverything) {
+    expect(text).toContain("Disallow: /admin");
+    expect(text).toContain("Disallow: /my-program");
+  }
+  expect(text).toMatch(/Disallow: \//);
 });
