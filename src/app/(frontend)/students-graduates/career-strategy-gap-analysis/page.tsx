@@ -112,7 +112,7 @@ const faqs = [
   },
   {
     q: "What if it doesn't help?",
-    a: "Then tell us within 7 days and we'll refund it. If you don't leave with a clearer picture of what's holding you back, we haven't done the job.",
+    a: "Complete your session, then email us within 7 days and we'll refund it in full. The conditions are in our Refund Policy.",
   },
 ];
 
@@ -202,8 +202,9 @@ export default async function GapAnalysisPage() {
                 ))}
               </ul>
               <p className="mt-5 border-t border-[var(--color-line)] pt-4 text-[12px] leading-relaxed text-brand-sub">
-                Refundable within 7 days if you don&apos;t leave with a clearer
-                picture of what&apos;s holding you back.
+                Not satisfied? Email us within 7 days of completing your session
+                for a full refund. See our{" "}
+                <a href="/refund-policy" className="underline underline-offset-2">Refund Policy</a>.
               </p>
             </div>
           </div>
@@ -446,9 +447,9 @@ export default async function GapAnalysisPage() {
           {/* The refund promise is the last objection standing. Say it here,
               not only in the FAQ where most people never scroll. */}
           <p className="mx-auto mt-8 max-w-[520px] text-[13.5px] leading-[1.65] text-white/75">
-            If you don&apos;t leave with a clearer picture of what&apos;s holding
-            you back, tell us within 7 days and we&apos;ll refund it. We&apos;d
-            rather give the money back than have you recommend us to nobody.
+            Not satisfied after your session? Email us within 7 days of completing
+            it and we&apos;ll refund it in full. See our{" "}
+            <a href="/refund-policy" className="underline underline-offset-2">Refund Policy</a>.
           </p>
         </div>
       </section>

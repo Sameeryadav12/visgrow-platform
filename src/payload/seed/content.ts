@@ -10,8 +10,8 @@ export const seedPrograms = [
     slug: "career-strategy-gap-analysis",
     tagline: "Start here",
     bestFor: "You want a straight answer before you spend money on anything else",
-    price: "",
-    priceNote: "Price being confirmed",
+    price: "$199",
+    priceNote: "one session",
     duration: "60–90 minutes",
     terms:
       "Price is indicative and confirmed before booking. Sessions are held online or in Adelaide. Rescheduling with 48 hours' notice is free.",
@@ -37,11 +37,11 @@ export const seedPrograms = [
     slug: "14-day-accelerator",
     tagline: "Clarity, confidence, momentum",
     bestFor: "You want momentum, fast, and a deadline that makes you act",
-    price: "$999",
-    priceNote: "14 days",
+    price: "$699",
+    priceNote: "Coming Soon!",
     duration: "14 days, about an hour a day",
     terms:
-      "Price is indicative and confirmed before you start. Payment plans available. The 14 days begin on your chosen start date.",
+      "Price is indicative and confirmed before you start. The 14 days begin on your chosen start date.",
     includes: [
       "14 structured modules, one a day",
       "Daily coaching check-ins",
@@ -64,16 +64,15 @@ export const seedPrograms = [
     slug: "career-coaching",
     tagline: "Deeper, personalised support",
     bestFor: "You want sustained support as your situation changes",
-    price: "",
-    priceNote: "Price being confirmed",
-    duration: "6 months, fortnightly",
+    price: "$2,499",
+    priceNote: "6 months",
+    duration: "3–6 months, fortnightly",
     terms:
       "Price is indicative and confirmed before you start. Payment plans available. Unused sessions do not roll over past the 6-month term.",
     includes: [
       "Fortnightly 1:1 sessions",
-      "Unlimited resume revisions",
+      "Unlimited resume revisions*",
       "Ongoing interview prep",
-      "Priority internship access",
     ],
     outcomes: [
       "You have someone in your corner for the whole search, not one session",

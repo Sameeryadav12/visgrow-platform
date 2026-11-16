@@ -190,8 +190,8 @@ const plans = [
   {
     name: "Career Strategy & Gap Analysis",
     sub: "Start here",
-    price: "",
-    period: "Price being confirmed",
+    price: "$199",
+    period: "one session",
     features: [
       "60–90 min 1:1 strategy session",
       "Resume & LinkedIn audit",
@@ -205,8 +205,8 @@ const plans = [
   {
     name: "14-Day Career Accelerator",
     sub: "Clarity, confidence, momentum",
-    price: "$999",
-    period: "14 days",
+    price: "$699",
+    period: "Coming Soon!",
     features: [
       "14 structured modules, one a day",
       "Daily coaching check-ins",
@@ -220,13 +220,12 @@ const plans = [
   {
     name: "Ongoing Career Coaching",
     sub: "Deeper, personalised support",
-    price: "",
-    period: "Price being confirmed",
+    price: "$2,499",
+    period: "6 months",
     features: [
       "Fortnightly 1:1 sessions",
-      "Unlimited resume revisions",
+      "Unlimited resume revisions*",
       "Ongoing interview prep",
-      "Priority internship access",
     ],
     href: "/students-graduates/career-coaching",
     cta: "See what's included →",
@@ -250,9 +249,9 @@ const plans = [
 ];
 
 const compareCols = [
-  { key: "gap", name: "Gap Analysis", price: "Price being confirmed", feat: false },
-  { key: "accel", name: "14-Day Accelerator", price: "$999 · 14 days", feat: true },
-  { key: "coaching", name: "Ongoing Coaching", price: "Price being confirmed", feat: false },
+  { key: "gap", name: "Gap Analysis", price: "$199 · one session", feat: false },
+  { key: "accel", name: "14-Day Accelerator", price: "$699 · Coming Soon!", feat: true },
+  { key: "coaching", name: "Ongoing Coaching", price: "$2,499 · 6 months", feat: false },
   { key: "intern", name: "Hosted Internship", price: "$3,499 incl. coaching", feat: false },
 ];
 
@@ -268,18 +267,18 @@ const compareRows: { feature: string; values: (string | boolean)[] }[] = [
   },
   {
     feature: "Time commitment",
-    values: ["One 60–90 min session", "14 days, ~1 hr a day", "6 months, fortnightly", "Ongoing placement"],
+    values: ["One 60–90 min session", "14 days, ~1 hr a day", "3–6 months, fortnightly", "120 hours"],
   },
   { feature: "Career Strategy & Gap Analysis", values: [true, true, true, true] },
-  { feature: "ATS-ready resume rebuild", values: ["Audit only", true, "Unlimited revisions", true] },
-  { feature: "LinkedIn optimisation", values: ["Audit only", true, "Unlimited revisions", true] },
+  { feature: "ATS-ready resume coaching", values: ["Audit only", true, "✓ Personalised, unlimited revisions*", true] },
+  { feature: "LinkedIn optimisation", values: ["Audit only", true, "✓ Personalised, unlimited revisions*", true] },
   { feature: "Cover letter coaching", values: [false, true, true, true] },
-  { feature: "Interview coaching", values: [false, "Mock interview", "Ongoing", true] },
+  { feature: "Interview coaching", values: [false, true, "✓ Personalised, ongoing*", true] },
   { feature: "Personal brand & elevator pitch", values: [false, true, true, true] },
-  { feature: "Hidden job market access", values: [false, true, true, true] },
-  { feature: "Real local work experience", values: [false, false, "Priority access", true] },
+  { feature: "Hidden job market strategies", values: [false, true, true, true] },
+  { feature: "Real local work experience", values: [false, false, false, true] },
   { feature: "Reference on completion", values: [false, false, false, true] },
-  { feature: "Payment plan available", values: [false, true, true, true] },
+  { feature: "Payment plan available", values: [false, false, true, true] },
 ];
 
 const faqs = [
@@ -318,7 +317,7 @@ export default async function Home() {
   const phone = settings?.phone || "1300 891 365";
   const phoneHref = `tel:${phone.replace(/\s/g, "")}`;
   const email = settings?.email || "hello@visgrowinternships.com.au";
-  const address = settings?.address || "Innovation House, Mawson Lakes SA";
+  const address = settings?.address || "45 Pirie Street, Adelaide SA";
   // Content comes from the CMS. The arrays above are the fallback, so the
   // page renders correctly before the CMS is seeded and stays up if the
   // database is unavailable.
@@ -958,10 +957,9 @@ export default async function Home() {
                 </h3>
                 <p className="text-[14.5px] leading-[1.65] text-brand-sub">
                   We can&apos;t guarantee you a job — anyone who does is
-                  selling you something. What we do guarantee: sit through
-                  your first session, and if you don&apos;t leave with a
-                  clearer picture of exactly what&apos;s holding you back,
-                  tell us and we&apos;ll refund it. No forms, no argument.
+                  selling you something. What we do offer: complete your
+                  Career Strategy &amp; Gap Analysis session, and if you&apos;re
+                  not satisfied, email us within 7 days for a full refund.
                 </p>
               </div>
               <Link
@@ -972,8 +970,8 @@ export default async function Home() {
               </Link>
             </div>
             <p className="mt-5 text-[12px] text-brand-sub">
-              *Refund applies to the Career Strategy &amp; Gap Analysis session
-              when requested within 7 days. Full terms confirmed at booking.
+              *Applies to the Career Strategy &amp; Gap Analysis session only.
+              See our <a href="/refund-policy" className="underline underline-offset-2">Refund Policy</a> for conditions.
             </p>
           </div>
         </div>
@@ -1060,6 +1058,11 @@ export default async function Home() {
                           <span className="font-black text-[#1cae6f]" aria-label="Included">✓</span>
                         ) : v === false ? (
                           <span className="text-[var(--color-line)]" aria-label="Not included">—</span>
+                        ) : v.startsWith("✓ ") ? (
+                          <span>
+                            <span className="mr-1.5 font-black text-[#1cae6f]" aria-hidden="true">✓</span>
+                            {v.slice(2)}
+                          </span>
                         ) : (
                           v
                         )}
@@ -1070,6 +1073,12 @@ export default async function Home() {
               </tbody>
             </table>
           </div>
+
+          <p className="mt-4 text-[12.5px] leading-relaxed text-brand-sub">
+            * Note: Unlimited resume, LinkedIn and interview revisions and
+            coaching apply to one target job role only, for a maximum period of
+            six months from the commencement of the coaching program.
+          </p>
 
           <p className="mt-6 text-[13px] text-brand-sub">
             Still torn between two? That&apos;s exactly what the Gap Analysis

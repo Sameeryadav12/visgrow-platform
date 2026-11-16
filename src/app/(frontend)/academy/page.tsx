@@ -3,6 +3,8 @@ import Link from "next/link";
 import Image from "next/image";
 import FaqAccordion from "@/components/FaqAccordion";
 import PartnerEnquiryForm from "@/components/PartnerEnquiryForm";
+import WorkshopFeedback from "@/components/WorkshopFeedback";
+import { acsFeedback } from "@/lib/workshop-feedback";
 import { getSiteSettings } from "@/lib/cms";
 import { getPageCopy, t, list, texts } from "@/lib/page-copy";
 
@@ -22,7 +24,7 @@ const pains = [
   {
     icon: "🧩",
     title: "The skills that matter never got taught",
-    body: "Communication, presence, networking, personal brand. Every job description asks for them; no curriculum ever covered them.",
+    body: "Communication, problem-solving, teamwork, adaptability and initiative. Every job description asks for them; most training never practises them.",
   },
   {
     icon: "📆",
@@ -127,7 +129,7 @@ export default async function AcademyPage() {
   const phone = settings?.phone || "1300 891 365";
   const phoneHref = `tel:${phone.replace(/\s/g, "")}`;
   const email = settings?.email || "hello@visgrowinternships.com.au";
-  const address = settings?.address || "Innovation House, Mawson Lakes SA";
+  const address = settings?.address || "45 Pirie Street, Adelaide SA";
   return (
     <>
       {/* ============ HERO ============ */}
@@ -142,11 +144,11 @@ export default async function AcademyPage() {
           <div className="grid gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
             <div>
               <span className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/35 bg-white/15 px-4 py-2 text-[12px] font-extrabold uppercase tracking-[1.5px]">
-                Pillar 03 · Visgrow Academy
+                Visgrow Academy
               </span>
 
               <h1 className="mb-6 text-[clamp(32px,4.8vw,56px)] leading-[1.02]">
-                {t(copy?.hero?.heading, "The skills every job asks for and no course ever taught.")}
+                {t(copy?.hero?.heading, "Qualified isn't the same as work-ready. We close the gap.")}
               </h1>
 
               <p className="mb-9 max-w-[560px] text-[16.5px] leading-[1.65] text-white/90">
@@ -331,6 +333,8 @@ export default async function AcademyPage() {
                   "20+ Years Industry Experience",
                   "Former VP, ASP",
                   "ACS Board Member",
+                  "Industry Skills Council Member",
+                  "Former General Manager",
                   "20,000+ LinkedIn Followers",
                 ].map((b) => (
                   <li key={b} className="rounded-[10px] border border-white/30 bg-white/15 px-4 py-2.5 text-[12.5px] font-bold">
@@ -342,6 +346,11 @@ export default async function AcademyPage() {
           </div>
         </div>
       </section>
+
+      <WorkshopFeedback
+        heading="What attendees said after our workshops."
+        quotes={acsFeedback}
+      />
 
       {/* ============ 6 · HOW TO IMPLEMENT ============ */}
       <section className="bg-white py-24 reveal" aria-labelledby="ac-how">

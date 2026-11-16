@@ -94,7 +94,7 @@ export default function BuyButton({
         Secure payment by Stripe. We never see your card details.
         <br />
         Read the{" "}
-        <a href="/terms-of-use" className="underline underline-offset-2">
+        <a href="/refund-policy" className="underline underline-offset-2">
           refund policy
         </a>{" "}
         before you pay.

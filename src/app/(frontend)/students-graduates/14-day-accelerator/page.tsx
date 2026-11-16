@@ -5,6 +5,7 @@ import FaqAccordion from "@/components/FaqAccordion";
 import { getPageCopy, t, list, texts } from "@/lib/page-copy";
 import BuyButton from "@/components/BuyButton";
 import { getProgramBySlug, getReadyDayCount, ACCELERATOR_TOTAL_DAYS } from "@/lib/cms";
+import { ACCELERATOR_COMING_SOON } from "@/lib/site-config";
 
 export const metadata: Metadata = {
   title: "14-Day Career Accelerator | Visgrow Adelaide",
@@ -109,7 +110,7 @@ export default async function AcceleratorPage() {
   const price = (program?.price ?? "").trim();
   // Recorded program: only offer instant paid access once all 14 days exist.
   const readyDays = await getReadyDayCount();
-  const canStartToday = readyDays >= ACCELERATOR_TOTAL_DAYS;
+  const canStartToday = !ACCELERATOR_COMING_SOON && readyDays >= ACCELERATOR_TOTAL_DAYS;
   const cms_pains = list(copy?.pain?.items, pains);
   const cms_benefits = list(copy?.benefits?.items, benefits);
   const cms_consequences = texts(copy?.consequences?.items, consequences);
@@ -129,6 +130,11 @@ export default async function AcceleratorPage() {
               <span className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/35 bg-white/15 px-4 py-2 text-[12px] font-extrabold uppercase tracking-[1.5px]">
                 Signature Program
               </span>
+              {ACCELERATOR_COMING_SOON && (
+                <span className="mb-6 ml-3 inline-flex items-center rounded-full bg-white px-4 py-2 text-[12px] font-extrabold uppercase tracking-[1.5px] text-brand-purple">
+                  Coming Soon!
+                </span>
+              )}
 
               <h1 className="mb-6 text-[clamp(34px,5vw,58px)] leading-[1.02]">
                 {t(copy?.hero?.heading, "14 days to clarity, confidence and momentum.")}
@@ -402,16 +408,18 @@ export default async function AcceleratorPage() {
                 href="/get-started?program=accelerator"
                 className="rounded-xl bg-white px-9 py-4 text-[15px] font-extrabold text-brand-purple shadow-[0_16px_36px_rgba(0,0,0,0.3)] transition-transform hover:-translate-y-1"
               >
-                Join the next intake{price ? ` — ${price}` : ""}
+                {ACCELERATOR_COMING_SOON
+                  ? `Coming Soon! Register your interest${price ? ` — ${price}` : ""}`
+                  : `Join the next intake${price ? ` — ${price}` : ""}`}
               </Link>
             )}
           </div>
 
           {!canStartToday && (
             <p className="mt-5 text-[13.5px] leading-relaxed text-white/75">
-              Places are taken one intake at a time so every day gets proper
-              attention. Tell us you&apos;re interested and we&apos;ll confirm
-              your start date before you pay anything.
+              {ACCELERATOR_COMING_SOON
+                ? "The 14-Day Career Accelerator is coming soon. Register your interest and we'll tell you the moment it opens. You won't pay anything until then."
+                : "Places are taken one intake at a time so every day gets proper attention. Tell us you're interested and we'll confirm your start date before you pay anything."}
             </p>
           )}
 

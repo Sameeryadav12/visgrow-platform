@@ -63,7 +63,7 @@ export async function runSeed(payload: Payload) {
       data: {
         phone: "1300 891 365",
         email: "hello@visgrowinternships.com.au",
-        address: "Innovation House, Mawson Lakes SA",
+        address: "45 Pirie Street, Adelaide SA",
         masterclassChapters: seedMasterclassChapters,
         audiencePopupEnabled: true,
         audiencePopupHeading: "Which one are you?",

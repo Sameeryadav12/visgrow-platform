@@ -3,6 +3,8 @@ import Link from "next/link";
 import Image from "next/image";
 import FaqAccordion from "@/components/FaqAccordion";
 import PartnerEnquiryForm from "@/components/PartnerEnquiryForm";
+import WorkshopFeedback from "@/components/WorkshopFeedback";
+import { solutionsPlusFeedback } from "@/lib/workshop-feedback";
 import { getSiteSettings } from "@/lib/cms";
 import { getPageCopy, t, list, texts } from "@/lib/page-copy";
 import GoogleReviews from "@/components/GoogleReviews";
@@ -125,7 +127,7 @@ export default async function EmployersPage() {
   const phone = settings?.phone || "1300 891 365";
   const phoneHref = `tel:${phone.replace(/\s/g, "")}`;
   const email = settings?.email || "hello@visgrowinternships.com.au";
-  const address = settings?.address || "Innovation House, Mawson Lakes SA";
+  const address = settings?.address || "45 Pirie Street, Adelaide SA";
   return (
     <>
       {/* ============ HERO ============ */}
@@ -362,7 +364,8 @@ export default async function EmployersPage() {
                   "20+ Years Industry Experience",
                   "Former VP, ASP",
                   "ACS Board Member",
-                  "Australia Day Council Committee",
+                  "Industry Skills Council Member",
+                  "Former General Manager",
                 ].map((b) => (
                   <li key={b} className="rounded-[10px] border border-white/30 bg-white/15 px-4 py-2.5 text-[12.5px] font-bold">
                     {b}
@@ -373,6 +376,11 @@ export default async function EmployersPage() {
           </div>
         </div>
       </section>
+
+      <WorkshopFeedback
+        heading="What workplace attendees said."
+        quotes={solutionsPlusFeedback}
+      />
 
       {/* Real Google reviews. Mustafa has no employer testimonials yet, so
           rather than inventing any, this shows whatever Google actually

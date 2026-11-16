@@ -15,6 +15,34 @@ import type { Payload } from "payload";
 type Correction = { find: string; replace: string; why: string };
 
 const CORRECTIONS: Correction[] = [
+  // --- November 2026 client feedback (Mustafa). Exact-string swaps so saved
+  // copy matches the updated code fallbacks.
+  {
+    why: "Academy headline did not grab attention.",
+    find: "The skills every job asks for and no course ever taught.",
+    replace: "Qualified isn't the same as work-ready. We close the gap.",
+  },
+  {
+    why: "Academy pain point: name the skills employers actually ask for.",
+    find: "Communication, presence, networking, personal brand. Every job description asks for them; no curriculum ever covered them.",
+    replace:
+      "Communication, problem-solving, teamwork, adaptability and initiative. Every job description asks for them; most training never practises them.",
+  },
+  {
+    why: "Skills Development page is for employers, not just graduates.",
+    find: "Thirteen modules covering everything a qualification leaves out.",
+    replace: "The workplace skills a qualification leaves out.",
+  },
+  {
+    why: "Visgrow does not report on attendance.",
+    find: "Attendance, engagement and student feedback back to you,",
+    replace: "Engagement and student feedback back to you,",
+  },
+  {
+    why: "Hosted internship support is mentoring.",
+    find: "Coaching runs alongside the placement",
+    replace: "Mentoring runs alongside the placement",
+  },
   {
     why: "The '80% of roles are never advertised' figure is widely repeated but poorly evidenced. Stating it as fact on a commercial page is a misleading-conduct risk.",
     find: "Seek and LinkedIn ads are roughly 20% of the market. The other 80% gets filled through people — before it's ever posted.",
@@ -139,6 +167,12 @@ async function applyConfirmedDetails(payload: Payload) {
   if (!settings?.businessName?.trim()) {
     patch.businessName = "Vis-Grow Internships";
   }
+  // New Adelaide office. Replaces the old Mawson Lakes address only if it is
+  // still exactly what we seeded.
+  const currentAddress = settings?.address?.trim();
+  if (!currentAddress || currentAddress === "Innovation House, Mawson Lakes SA") {
+    patch.address = "45 Pirie Street, Adelaide SA";
+  }
   if (!settings?.abn?.trim()) {
     patch.abn = "32 274 155 355";
   }
@@ -193,6 +227,84 @@ async function applyConfirmedDetails(payload: Payload) {
 }
 
 /**
+ * Mustafa's November feedback: confirmed prices and wording for programs
+ * already saved in the database.
+ *
+ * Every change is "if the field still holds the exact old value, replace it".
+ * Anything he has since edited himself is left alone.
+ */
+async function applyNovemberProgramUpdates(payload: Payload) {
+  type Fix = {
+    price?: [string, string];
+    priceNote?: [string, string];
+    duration?: [string, string];
+    terms?: [string, string];
+    items?: [string, string | null][];
+  };
+  const fixes: Record<string, Fix> = {
+    "career-strategy-gap-analysis": {
+      price: ["", "$199"],
+      priceNote: ["Price being confirmed", "one session"],
+    },
+    "14-day-accelerator": {
+      price: ["$999", "$699"],
+      priceNote: ["14 days", "Coming Soon!"],
+      terms: [
+        "Price is indicative and confirmed before you start. Payment plans available. The 14 days begin on your chosen start date.",
+        "Price is indicative and confirmed before you start. The 14 days begin on your chosen start date.",
+      ],
+    },
+    "career-coaching": {
+      price: ["", "$2,499"],
+      priceNote: ["Price being confirmed", "6 months"],
+      duration: ["6 months, fortnightly", "3–6 months, fortnightly"],
+      items: [
+        ["Unlimited resume revisions", "Unlimited resume revisions*"],
+        ["Priority internship access", null],
+      ],
+    },
+  };
+
+  for (const [slug, fix] of Object.entries(fixes)) {
+    const found = await payload.find({
+      collection: "programs",
+      where: { slug: { equals: slug } },
+      limit: 1,
+      depth: 0,
+    });
+    const program = found.docs[0];
+    if (!program) continue;
+
+    const data: Record<string, unknown> = {};
+    for (const key of ["price", "priceNote", "duration", "terms"] as const) {
+      const pair = fix[key];
+      if (pair && (program[key] ?? "").trim() === pair[0]) data[key] = pair[1];
+    }
+    if (fix.items && Array.isArray(program.includes)) {
+      let changed = false;
+      const next: { item: string }[] = [];
+      for (const row of program.includes) {
+        const hit = fix.items.find(([from]) => from === row.item);
+        if (!hit) {
+          next.push({ item: row.item });
+        } else {
+          changed = true;
+          if (hit[1]) next.push({ item: hit[1] });
+        }
+      }
+      if (changed) data.includes = next;
+    }
+
+    if (Object.keys(data).length) {
+      await payload.update({ collection: "programs", id: program.id, data });
+      payload.logger.info(
+        `[visgrow] Updated ${slug}: ${Object.keys(data).join(", ")}`,
+      );
+    }
+  }
+}
+
+/**
  * Makes sure the free scorecard is linked from the main menu.
  *
  * The navigation is stored in the database and the saved copy wins over the
@@ -234,6 +346,7 @@ export async function runCorrections(payload: Payload) {
 
   try {
     await applyConfirmedDetails(payload);
+    await applyNovemberProgramUpdates(payload);
     await ensureScorecardLink(payload);
 
     // Home page copy

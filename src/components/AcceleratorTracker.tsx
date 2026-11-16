@@ -102,7 +102,7 @@ export default function AcceleratorTracker() {
                 {isDone(m.day) ? "Completed ✓" : "Mark Day Complete →"}
               </button>
               <p className="mt-4 text-[12px] text-brand-sub">
-                Preview only — the full accelerator is delivered live with your
+                Preview only — the full accelerator is delivered with your
                 coach, day by day.
               </p>
             </div>

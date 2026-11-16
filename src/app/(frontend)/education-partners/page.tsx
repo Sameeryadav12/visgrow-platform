@@ -3,6 +3,8 @@ import Link from "next/link";
 import Image from "next/image";
 import FaqAccordion from "@/components/FaqAccordion";
 import PartnerEnquiryForm from "@/components/PartnerEnquiryForm";
+import WorkshopFeedback from "@/components/WorkshopFeedback";
+import { studyAdelaideFeedback } from "@/lib/workshop-feedback";
 import { getSiteSettings } from "@/lib/cms";
 import { getPageCopy, t, list, texts } from "@/lib/page-copy";
 import GoogleReviews from "@/components/GoogleReviews";
@@ -58,7 +60,7 @@ const services = [
     points: [
       "Hosted and supervised directly by Visgrow",
       "Real client-facing project work, not observation",
-      "Coaching runs alongside the placement",
+      "Mentoring runs alongside the placement",
       "Students finish with a portfolio piece and a genuine reference",
     ],
   },
@@ -89,7 +91,7 @@ const steps = [
   {
     n: "04",
     title: "Report and refine",
-    body: "Attendance, engagement and student feedback back to you, so you can evidence the investment and improve the next round.",
+    body: "Engagement and student feedback back to you, so you can evidence the investment and improve the next round.",
   },
 ];
 
@@ -125,7 +127,7 @@ export default async function EducationPartnersPage() {
   const phone = settings?.phone || "1300 891 365";
   const phoneHref = `tel:${phone.replace(/\s/g, "")}`;
   const email = settings?.email || "hello@visgrowinternships.com.au";
-  const address = settings?.address || "Innovation House, Mawson Lakes SA";
+  const address = settings?.address || "45 Pirie Street, Adelaide SA";
   return (
     <>
       {/* ============ HERO ============ */}
@@ -348,9 +350,17 @@ export default async function EducationPartnersPage() {
                 {c}
               </li>
             ))}
+            <li className="rounded-lg px-3.5 py-2 text-[12.5px] font-bold italic">
+              and many more!
+            </li>
           </ul>
         </div>
       </section>
+
+      <WorkshopFeedback
+        heading="What attendees said after our workshops."
+        quotes={studyAdelaideFeedback}
+      />
 
       {/* Real Google reviews only. No education-partner testimonials exist
           yet, and inventing them is illegal as well as wrong — this section
@@ -438,6 +448,8 @@ export default async function EducationPartnersPage() {
 
           <PartnerEnquiryForm
             audience="Education Partner"
+            messageLabel="Tell us about your institution"
+            messagePlaceholder="Your student cohort, the support you offer now, and what you'd like your students to gain…"
             interests={[
               "Career & Employability Services",
               "Visgrow-Hosted Internships",

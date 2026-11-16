@@ -186,8 +186,8 @@ export default async function AboutPage() {
                 <p>
                   He&apos;s landed roles without formally applying, held
                   multiple board positions, and served as Vice President of
-                  ASP. He sits on ACS board positions and the Australia Day
-                  Council committee, and Visgrow operates from Adelaide&apos;s
+                  ASP. He sits on ACS board positions and is an Industry Skills
+                  Council member, and Visgrow operates from Adelaide&apos;s
                   innovation precincts.
                 </p>
                 <p>
@@ -208,7 +208,8 @@ export default async function AboutPage() {
                   "20+ Years Industry Experience",
                   "Former VP, ASP",
                   "ACS Board Member",
-                  "Australia Day Council Committee",
+                  "Industry Skills Council Member",
+                  "Former General Manager",
                   "20,000+ LinkedIn Followers",
                 ].map((b) => (
                   <li key={b} className="rounded-[10px] border border-white/30 bg-white/15 px-4 py-2.5 text-[12.5px] font-bold">

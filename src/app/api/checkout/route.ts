@@ -3,6 +3,7 @@ import { getPayload } from "payload";
 import config from "@payload-config";
 import { stripe, priceToCents } from "@/lib/stripe";
 import { callerKey, rateLimit } from "@/lib/rate-limit";
+import { ACCELERATOR_COMING_SOON } from "@/lib/site-config";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -63,6 +64,13 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "We couldn't find that program." }, { status: 404 });
     }
 
+    if (slug === "14-day-accelerator" && ACCELERATOR_COMING_SOON) {
+      return NextResponse.json(
+        { error: "The 14-Day Career Accelerator is coming soon. Register your interest and we'll let you know." },
+        { status: 409 },
+      );
+    }
+
     const amount = priceToCents(program.price);
     if (!amount) {
       return NextResponse.json(
@@ -114,7 +122,7 @@ export async function POST(request: Request) {
       consent_collection: { terms_of_service: "required" },
       custom_text: {
         terms_of_service_acceptance: {
-          message: `I agree to the [Terms & Conditions](${SITE}/terms-of-use), including the refund policy.`,
+          message: `I agree to the [Terms & Conditions](${SITE}/terms-of-use), including the [Refund Policy](${SITE}/refund-policy).`,
         },
       },
 
