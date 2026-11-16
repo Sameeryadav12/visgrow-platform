@@ -81,9 +81,9 @@ export default function Header({
           <Image
             src="/logo/PNG/visgrow-logo-primary.png"
             alt="Visgrow"
-            width={140}
-            height={40}
-            className="h-9 w-auto"
+            width={168}
+            height={60}
+            className="h-11 w-auto md:h-14 xl:h-[60px]"
             priority
           />
         </Link>

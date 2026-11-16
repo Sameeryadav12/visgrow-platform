@@ -165,6 +165,18 @@ export default async function PortalPage() {
           </Card>
         )}
 
+        {data.hasAcademy && (
+          <Card
+            title="Skills Development"
+            href="/my-academy"
+            cta="Open your modules"
+          >
+            <p className="text-[14.5px] leading-relaxed text-brand-sub">
+              Your Visgrow Academy modules, with a video and a task for each.
+            </p>
+          </Card>
+        )}
+
         <Card
           title="Your sessions"
           href="/portal/sessions"

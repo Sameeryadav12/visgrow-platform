@@ -32,7 +32,7 @@ export const SiteSettings: GlobalConfig = {
               name: "address",
               type: "text",
               label: "Address",
-              defaultValue: "Innovation House, Mawson Lakes SA",
+              defaultValue: "45 Pirie Street, Adelaide SA",
             },
             {
               name: "legalLastUpdated",

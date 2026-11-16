@@ -15,6 +15,7 @@ test.describe("private data stays private", () => {
     ["students", "/api/students"],
     ["lessons — these hold the paid video IDs", "/api/lessons"],
     ["users", "/api/users"],
+    ["academy modules", "/api/academy-modules"],
   ] as const;
 
   for (const [what, url] of MUST_BE_LOCKED) {
@@ -49,6 +50,16 @@ test.describe("the paid program", () => {
 
   test("individual days are not reachable either", async ({ page }) => {
     await page.goto("/my-program/day/1");
+    await expect(page).toHaveURL(/\/sign-in/);
+  });
+
+  test("the Academy area needs a sign-in", async ({ page }) => {
+    await page.goto("/my-academy");
+    await expect(page).toHaveURL(/\/sign-in/);
+  });
+
+  test("individual Academy modules are not reachable either", async ({ page }) => {
+    await page.goto("/my-academy/1");
     await expect(page).toHaveURL(/\/sign-in/);
   });
 

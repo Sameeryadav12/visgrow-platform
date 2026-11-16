@@ -55,3 +55,9 @@ next-env.d.ts
 
 # Customer files (resumes, feedback). Private — never commit these.
 /private-uploads
+
+# Mustafa's original full-size photo folders. Web-sized copies live in public/images/photos.
+/public/ADELAIDE OFFICE PHOTOS/
+/public/Corporate or Industry Workshops/
+/public/Education Workshops/
+/public/Self Shots and other/

@@ -29,8 +29,10 @@ export default function robots(): MetadataRoute.Robots {
           "/api/",
           "/privacy-policy",
           "/terms-of-use",
+          "/refund-policy",
           // Paid program area — must never appear in search results.
           "/my-program",
+          "/my-academy",
           "/my-program/",
           "/portal",
           "/portal/",

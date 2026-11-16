@@ -159,11 +159,11 @@ export default async function AboutPage() {
           <div className="grid gap-14 lg:grid-cols-[0.8fr_1.2fr] lg:items-center">
             <div className="relative aspect-[5/4] overflow-hidden rounded-[20px] border-4 border-white/25 shadow-[0_28px_64px_rgba(0,0,0,0.28)] lg:aspect-[4/5]">
               <Image
-                src="/images/mustafa-kadir.jpg"
+                src="/images/photos/mustafa-portrait.jpg"
                 alt="Mustafa Kadir, Founder and Managing Director of Visgrow"
                 fill
                 sizes="(max-width: 1024px) 100vw, 35vw"
-                className="object-cover object-center"
+                className="object-cover object-[center_22%]"
                 priority
               />
             </div>
@@ -186,8 +186,8 @@ export default async function AboutPage() {
                 <p>
                   He&apos;s landed roles without formally applying, held
                   multiple board positions, and served as Vice President of
-                  ASP. He sits on ACS board positions and the Australia Day
-                  Council committee, and Visgrow operates from Adelaide&apos;s
+                  ASP. He sits on ACS board positions and is an Industry Skills
+                  Council member, and Visgrow operates from Adelaide&apos;s
                   innovation precincts.
                 </p>
                 <p>
@@ -208,7 +208,8 @@ export default async function AboutPage() {
                   "20+ Years Industry Experience",
                   "Former VP, ASP",
                   "ACS Board Member",
-                  "Australia Day Council Committee",
+                  "Industry Skills Council Member",
+                  "Former General Manager",
                   "20,000+ LinkedIn Followers",
                 ].map((b) => (
                   <li key={b} className="rounded-[10px] border border-white/30 bg-white/15 px-4 py-2.5 text-[12.5px] font-bold">
@@ -242,21 +243,23 @@ export default async function AboutPage() {
             </p>
           </div>
 
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {[
-              { src: "uoa-bright-futures.jpg", cap: "University of Adelaide — Bright Futures cohort" },
-              { src: "acs-session.jpg", cap: "Personal branding session with ACS" },
-              { src: "issua-full-room.jpg", cap: "A full room of students, mid-session" },
-              { src: "pmi-presenting.jpg", cap: "Delivering to a professional audience" },
+              { src: "uoa-bright-futures-presenting.jpg", cap: "University of Adelaide — Bright Futures" },
+              { src: "acs-career-coaching-group.jpg", cap: "ACS career coaching workshop" },
+              { src: "acs-personal-branding-room.jpg", cap: "A full room at an ACS personal branding session" },
+              { src: "pmi-adelaide-presenting.jpg", cap: "Presenting to PMI Adelaide" },
               { src: "study-adelaide-group.jpg", cap: "Study Adelaide student group" },
-              { src: "corporate-team-session.jpg", cap: "On-site with a client team" },
+              { src: "solutions-plus-team.jpg", cap: "On-site with the Solutions Plus team" },
+              { src: "tafesa-future-of-work.jpg", cap: "TAFE SA — Future of Work session" },
+              { src: "uoa-pm-society-group.jpg", cap: "University of Adelaide Project Management Society" },
             ].map((g) => (
               <figure
                 key={g.src}
                 className="group relative h-[230px] overflow-hidden rounded-[16px] border border-[var(--color-line)]"
               >
                 <Image
-                  src={`/images/real/${g.src}`}
+                  src={`/images/photos/${g.src}`}
                   alt={g.cap}
                   fill
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"

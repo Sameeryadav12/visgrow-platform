@@ -1,9 +1,16 @@
 import Link from "next/link";
 
+export type LegalBlock =
+  | { t: "p"; v: string }
+  | { t: "h"; v: string }
+  | { t: "ul"; v: string[] };
+
 export type LegalSection = {
   heading: string;
   paragraphs?: string[];
   list?: string[];
+  /** Ordered content. Used when paragraphs and lists are interleaved. */
+  blocks?: LegalBlock[];
 };
 
 export default function LegalPage({
@@ -64,6 +71,30 @@ export default function LegalPage({
                   <span className="mr-2 text-brand-purple">{i + 1}.</span>
                   {s.heading}
                 </h2>
+                {s.blocks?.map((b, bi) => {
+                  if (b.t === "h")
+                    return (
+                      <h3 key={bi} className="mb-2 mt-6 text-[16.5px] font-extrabold text-[var(--color-ink)]">
+                        {b.v}
+                      </h3>
+                    );
+                  if (b.t === "ul")
+                    return (
+                      <ul key={bi} className="mb-3.5 mt-3 flex flex-col gap-2.5">
+                        {b.v.map((l) => (
+                          <li key={l} className="flex gap-2.5 text-[14.5px] leading-[1.65] text-brand-sub">
+                            <span className="mt-0.5 font-black text-brand-purple" aria-hidden="true">•</span>
+                            {l}
+                          </li>
+                        ))}
+                      </ul>
+                    );
+                  return (
+                    <p key={bi} className="mb-3.5 whitespace-pre-line text-[14.5px] leading-[1.75] text-brand-sub">
+                      {b.v}
+                    </p>
+                  );
+                })}
                 {s.paragraphs?.map((p) => (
                   <p key={p} className="mb-3.5 text-[14.5px] leading-[1.75] text-brand-sub">
                     {p}
@@ -91,10 +122,10 @@ export default function LegalPage({
               answer directly.
             </p>
             <a
-              href="mailto:hello@visgrowinternships.com.au"
+              href="mailto:admin@visgrow.com.au"
               className="inline-block rounded-[10px] bg-brand-gradient px-5 py-3 text-[13.5px] font-extrabold text-white transition-transform hover:-translate-y-0.5"
             >
-              hello@visgrowinternships.com.au
+              admin@visgrow.com.au
             </a>
           </div>
         </div>

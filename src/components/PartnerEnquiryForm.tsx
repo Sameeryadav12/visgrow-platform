@@ -8,9 +8,13 @@ const fieldBase =
 export default function PartnerEnquiryForm({
   audience,
   interests,
+  messageLabel = "Tell us about your team",
+  messagePlaceholder = "Team size, roles, and what you'd like to see change…",
 }: {
   audience: "Employer" | "Education Partner";
   interests: string[];
+  messageLabel?: string;
+  messagePlaceholder?: string;
 }) {
   const [status, setStatus] = useState<"idle" | "submitting" | "done" | "error">("idle");
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -121,14 +125,14 @@ export default function PartnerEnquiryForm({
 
       <div className="mt-4">
         <label htmlFor="pe-msg" className="mb-1.5 block text-[13px] font-bold">
-          Tell us about your team <span className="font-medium text-brand-sub">(optional)</span>
+          {messageLabel} <span className="font-medium text-brand-sub">(optional)</span>
         </label>
         <textarea
           id="pe-msg"
           name="message"
           rows={4}
           className={`${fieldBase} resize-y`}
-          placeholder="Team size, roles, and what you'd like to see change…"
+          placeholder={messagePlaceholder}
         />
       </div>
 

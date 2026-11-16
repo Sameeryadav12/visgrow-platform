@@ -522,7 +522,7 @@ export const seedPageCopy = [
         },
         {
           "title": "Report and refine",
-          "body": "Attendance, engagement and student feedback back to you, so you can evidence the investment and improve the next round."
+          "body": "Engagement and student feedback back to you, so you can evidence the investment and improve the next round."
         }
       ]
     },
@@ -651,7 +651,7 @@ export const seedPageCopy = [
         {
           "icon": "🧩",
           "title": "The skills that matter never got taught",
-          "body": "Communication, presence, networking, personal brand. Every job description asks for them; no curriculum ever covered them."
+          "body": "Communication, problem-solving, teamwork, adaptability and initiative. Every job description asks for them; most training never practises them."
         },
         {
           "icon": "📆",
@@ -661,7 +661,7 @@ export const seedPageCopy = [
       ]
     },
     "hero": {
-      "heading": "The skills every job asks for and no course ever taught."
+      "heading": "Qualified isn't the same as work-ready. We close the gap."
     }
   },
   {
@@ -672,7 +672,7 @@ export const seedPageCopy = [
     },
     "hero": {
       "eyebrow": "Why a framework, not a workshop",
-      "heading": "Thirteen modules covering everything a qualification leaves out."
+      "heading": "The workplace skills a qualification leaves out."
     }
   },
   {

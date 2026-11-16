@@ -134,6 +134,9 @@ export default async function Footer() {
             <Link href="/terms-of-use" className="block py-2 transition-colors hover:text-brand-purple">
               Terms of Use
             </Link>
+            <Link href="/refund-policy" className="block py-2 transition-colors hover:text-brand-purple">
+              Refund Policy
+            </Link>
             {/* Second way in. Someone hunting for their login checks the
                 footer as often as the header. */}
             <Link href="/sign-in" className="block py-2 transition-colors hover:text-brand-purple">

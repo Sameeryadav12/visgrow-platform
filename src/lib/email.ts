@@ -1,7 +1,9 @@
 import { Resend } from "resend";
 
 const apiKey = process.env.RESEND_API_KEY;
-const from = process.env.EMAIL_FROM || "Visgrow <onboarding@resend.dev>";
+const from = process.env.EMAIL_FROM || "Visgrow <admin@visgrow.com.au>";
+// Customer replies go to the same mailbox the emails are sent from.
+const replyTo = process.env.EMAIL_REPLY_TO || "admin@visgrow.com.au";
 const to = process.env.EMAIL_TO || "hello@visgrowinternships.com.au";
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 
@@ -105,6 +107,7 @@ async function confirmToLead(e: EnquiryPayload) {
 
   return resend.emails.send({
     from,
+    replyTo,
     to: e.email,
     subject: "We got your message — Visgrow",
     html,
@@ -159,6 +162,7 @@ export async function sendSignInLink({
 
   const result = await resend.emails.send({
     from,
+    replyTo,
     to: email,
     subject: "Your Visgrow sign-in link",
     html,
@@ -251,6 +255,7 @@ export async function sendScorecardResult({
   try {
     const res = await resend.emails.send({
       from,
+      replyTo,
       to: email,
       subject: `${esc(name.split(" ")[0])}, your job-readiness score: ${result.overall}/100`,
       html,
@@ -311,6 +316,7 @@ export async function sendPortalWelcome({
   try {
     const result = await resend.emails.send({
       from,
+      replyTo,
       to: email,
       subject: "Your Visgrow portal is ready",
       html,
@@ -394,6 +400,7 @@ export async function sendDailyDigest({
 
   return resend.emails.send({
     from,
+    replyTo,
     to,
     subject: `Visgrow — ${due.length + fresh.length} to follow up today`,
     html,
@@ -452,7 +459,7 @@ export async function sendStudentNudge({
     to: email,
     subject: `Your Accelerator is waiting, ${name.split(" ")[0]}`,
     html,
-    replyTo: to,
+    replyTo,
   });
 }
 

@@ -147,7 +147,7 @@ export const homeDefaults = {
     heading: "Simple pricing. No surprises.",
     body: "Every program moves you toward the same goal — being genuinely job-ready. Start wherever makes sense for you.",
     footnote:
-      "*Pricing is indicative and confirmed at your Career Strategy & Gap Analysis. Payment plans available on selected programs. No program guarantees a job offer — outcomes depend on your effort, the market, and role availability.",
+      "*Payment plans are available on Ongoing Career Coaching and the Hosted Internship only. No program guarantees a job offer — outcomes depend on your effort, the market, and role availability.",
   },
 
   faq: {

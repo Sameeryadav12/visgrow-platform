@@ -6,11 +6,18 @@
  */
 export const MASTERCLASS_YOUTUBE_ID = "";
 
+/**
+ * The 14-Day Career Accelerator is shown as "Coming Soon!" and cannot be
+ * bought while this is true. Set to false to switch purchasing back on (it
+ * still also needs all 14 recorded days to be ready).
+ */
+export const ACCELERATOR_COMING_SOON = true;
+
 export const contact = {
   phone: "1300 891 365",
   phoneHref: "tel:1300891365",
   email: "hello@visgrowinternships.com.au",
-  address: "Innovation House, Mawson Lakes SA",
+  address: "45 Pirie Street, Adelaide SA",
 };
 
 export const masterclassChapters = [

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import EnquiryForm from "@/components/EnquiryForm";
 import { getSiteSettings } from "@/lib/cms";
 import { getPageCopy, t } from "@/lib/page-copy";
@@ -12,6 +13,10 @@ export const metadata: Metadata = {
 };
 
 const offices = [
+  {
+    name: "Adelaide office",
+    lines: ["Level 15, 45 Pirie Street", "Adelaide SA 5000"],
+  },
   {
     name: "Innovation House",
     lines: ["Mawson Lakes SA 5095"],
@@ -155,6 +160,35 @@ export default async function ContactPage() {
               </p>
             </div>
             <EnquiryForm />
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-brand-lavender py-16" aria-label="Our Adelaide office">
+        <div className="mx-auto max-w-[1240px] px-6 lg:px-10">
+          <h2 className="mb-2 text-[clamp(24px,3vw,34px)] text-[var(--color-ink)]">
+            Our Adelaide office
+          </h2>
+          <p className="mb-8 text-[15px] text-brand-sub">
+            Level 15, 45 Pirie Street, Adelaide SA 5000.
+          </p>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {[
+              { src: "adelaide-office-1.jpg", alt: "Reception area of the Visgrow Adelaide office" },
+              { src: "adelaide-office-2.jpg", alt: "Open-plan workspace in the Adelaide office" },
+              { src: "adelaide-office-3.jpg", alt: "Meeting and lounge area in the Adelaide office" },
+              { src: "adelaide-office-4.jpg", alt: "Glass-walled meeting rooms in the Adelaide office" },
+            ].map((o) => (
+              <div key={o.src} className="relative h-[200px] overflow-hidden rounded-[16px] border border-[var(--color-line)]">
+                <Image
+                  src={`/images/photos/${o.src}`}
+                  alt={o.alt}
+                  fill
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                  className="object-cover"
+                />
+              </div>
+            ))}
           </div>
         </div>
       </section>

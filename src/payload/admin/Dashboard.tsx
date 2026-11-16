@@ -422,6 +422,11 @@ export const Dashboard = async () => {
           hint="The 14 Accelerator days — videos, tasks and downloads."
         />
         <Shortcut
+          href="/admin/collections/academy-modules"
+          title="Academy modules"
+          hint="The Skills Development modules — videos, tasks and links."
+        />
+        <Shortcut
           href="/admin/collections/payments"
           title="Payments"
           hint="Every card payment, recorded automatically. Read-only."

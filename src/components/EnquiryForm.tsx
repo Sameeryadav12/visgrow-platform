@@ -5,6 +5,7 @@ import { useState } from "react";
 type Status = "idle" | "submitting" | "success" | "error";
 
 const enquiryTypes = [
+  "Career Strategy & Gap Analysis",
   "Career Coaching",
   "14-Day Career Accelerator",
   "Visgrow-Hosted Internship",
